@@ -53,7 +53,7 @@ class HarvestController extends Controller implements HasMiddleware
         
         $harvest = Harvest::create($validated);
         
-        return redirect()->route('sklizne.show', $harvest)
+        return redirect()->route('harvests.show', $harvest)
             ->with('success', 'Harvest registered.');
     }
 
