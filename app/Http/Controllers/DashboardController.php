@@ -2,54 +2,93 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\WineyardRow;
+use App\Models\Harvest;
+use App\Models\Treatment;
+use App\Models\WineBatch;
+use App\Models\Purchase;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
     public function index()
     {
-        // Simulované dáta z databázy (namiesto modelu Row::all())
-        $rows = [
-            [
-                'id' => 'R-01',
-                'variety' => 'Frankovka Modrá',
-                'count' => 120,
-                'last_treatment_date' => Carbon::now()->subDays(20), // Pred 20 dňami (OK)
-                'last_treatment_type' => 'Postrek - Síra',
-                'planned_harvest' => Carbon::now()->addDays(5),
-                'status' => 'ok'
-            ],
-            [
-                'id' => 'R-02',
-                'variety' => 'Rizling Vlašský',
-                'count' => 115,
-                'last_treatment_date' => Carbon::now()->subDays(5), // Pred 5 dňami (POZOR!)
-                'last_treatment_type' => 'Postrek - Fungicíd',
-                'planned_harvest' => Carbon::now()->addDays(2), // Zber za 2 dni -> kolízia s karenčnou dobou
-                'status' => 'warning'
-            ],
-            [
-                'id' => 'R-03',
-                'variety' => 'Veltlínske Zelené',
-                'count' => 200,
-                'last_treatment_date' => Carbon::now()->subDays(45),
-                'last_treatment_type' => 'Rez',
-                'planned_harvest' => Carbon::now()->addDays(10),
-                'status' => 'ok'
-            ],
-        ];
+        $user = auth()->user();
 
-        // Výpočet varovaní (ak je posledný postrek < 14 dní pred plánovanou žatvou)
-        $alerts = [];
-        foreach ($rows as $row) {
-            $daysDiff = $row['last_treatment_date']->diffInDays($row['planned_harvest']);
-            // Ak je postrek a rozdiel do zberu je menej ako 14 dní
-            if (str_contains($row['last_treatment_type'], 'Postrek') && $daysDiff < 14) {
-                $alerts[] = "POZOR: Riadok {$row['id']} ({$row['variety']}) má naplánovaný zber príliš skoro po postreku! (Karenčná doba)";
-            }
+        if ($user->hasRole('admin')) {
+            return $this->adminDashboard();
+        } elseif ($user->hasRole('winemaker')) {
+            return $this->winemakerDashboard();
+        } elseif ($user->hasRole('worker')) {
+            return $this->workerDashboard();
+        } elseif ($user->hasRole('customer')) {
+            return $this->customerDashboard();
         }
 
-        return view('admin.dashboard', compact('rows', 'alerts'));
+        return view('dashboard');
+    }
+
+    /**
+     * Admin Dashboard
+     */
+    private function adminDashboard()
+    {
+        return view('dashboard', [
+            'totalUsers' => User::count(),
+            'activeUsers' => User::where('is_active', true)->count(),
+            'totalVineyards' => WineyardRow::count(),
+            'totalHarvests' => Harvest::count(),
+            'recentUsers' => User::latest('created_at')->limit(5)->get(),
+        ]);
+    }
+
+    /**
+     * Vinar Dashboard
+     */
+    private function winemakerDashboard()
+    {
+        $user = auth()->user();
+
+        return view('dashboard', [
+            'myVineyards' => $user->vineyards()->count(),
+            'myVineyardsList' => $user->vineyards()->paginate(5),
+            'totalHarvests' => $user->harvests()->count(),
+            'totalBatches' => WineBatch::whereHas('harvest.vineyard', function($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })->count(),
+            'totalTreatments' => $user->treatments()->count(),
+        ]);
+    }
+
+    /**
+     * Worker Dashboard
+     */
+    private function workerDashboard()
+    {
+        return view('dashboard', [
+            'recentTreatments' => Treatment::where('user_id', auth()->id())
+                ->latest('date_time')
+                ->limit(5)
+                ->get(),
+            'recentHarvests' => Harvest::where('user_id', auth()->id())
+                ->latest('date_time')
+                ->limit(5)
+                ->get(),
+        ]);
+    }
+
+    /**
+     * Customer Dashboard
+     */
+    private function customerDashboard()
+    {
+        $user = auth()->user();
+
+        return view('dashboard', [
+            'myPurchases' => $user->purchases()->count(),
+            'totalSpent' => $user->purchases()->sum('amount'),
+            'availableWines' => WineBatch::where('in_stock', true)->count(),
+        ]);
     }
 }

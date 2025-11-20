@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WineyardRowController;
@@ -11,11 +12,15 @@ use App\Models\WineBatch;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 
-
-Route::get('/', function () {
+// functional user show
+/* Route::get('/', function () {
     $users = User::take(5)->get();
     return view('home', compact('users'));
-});
+}); */
+
+Route::get('/', function () {
+    return view('welcome');
+})->name('home');
 
 Route::get('/guest', function () {
     $wine = WineBatch::take(5)->get();
@@ -31,24 +36,17 @@ Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('adm
 
 
 Route::get('/user', function () {
-    return view('uzivatele');
+    return view('users');
 });
 
 // ============================================
 // Autentifikácia (Login, Logout, Register)
 // ============================================
-Route::get('/login', function () {
-    return view('auth.login');
-})->name('login');
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
-Route::post('/login', function () {
-    // Implementuj vlastnú logiku alebo použi Laravel Breeze/Jetstream
-})->name('login.post');
-
-Route::post('/logout', function () {
-    auth()->logout();
-    return redirect('/');
-})->name('logout');
+Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
 // ============================================
 // Autorizované routes – Len pre prihlásených
@@ -56,27 +54,45 @@ Route::post('/logout', function () {
 Route::middleware('auth')->group(function () {
     
     // Dashboard
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    
+    // Logout
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Resource routes s middleware na úrovni grupy
-    Route::resources([
-        'users' => UserController::class,
-        'winerows' => WineyardRowController::class,
-        'harvests' => HarvestController::class,
-        'treatments' => TreatmentController::class,
-        'purchases' => PurchaseController::class,
-        'batches' => WineBatchController::class,
-    ]);
+    // ============================================
+    // Admin Routes
+    // ============================================
+    Route::middleware('role:admin')->group(function () {
+        Route::resource('users', UserController::class);
+    });
 
-    // Vnorené resources – Sklizne konkrétneho vinoradka
-    Route::get('/winerows/{wineyardrow}/harvests', [HarvestController::class, 'indexByWineyardRow'])
-        ->name('winerows.harvests');
+    // ============================================
+    // Vinar Routes
+    // ============================================
+    Route::middleware('role:vinar')->group(function () {
+        Route::resource('vineyards', WineyardRowController::class);
+        Route::resource('harvests', HarvestController::class);
+        Route::resource('treatments', TreatmentController::class);
+        Route::resource('wine_batches', WineBatchController::class);
+    });
 
-    // Nákupy konkrétneho užívateľa
-    Route::get('/my-purchases', [PurchaseController::class, 'myPurchases'])
-        ->name('my-purchases');
+    // ============================================
+    // Worker Routes
+    // ============================================
+    Route::middleware('role:worker')->group(function () {
+        Route::resource('harvests', HarvestController::class, ['only' => ['index', 'create', 'store']]);
+        Route::resource('treatments', TreatmentController::class, ['only' => ['index', 'create', 'store']]);
+    });
+
+    // ============================================
+    // Customer Routes
+    // ============================================
+    Route::middleware('role:customer')->group(function () {
+        Route::get('/wine_batches', [WineBatchController::class, 'index'])->name('wine_batches.index');
+        Route::get('/wine_batches/{wine_batch}', [WineBatchController::class, 'show'])->name('wine_batches.show');
+        Route::resource('purchases', PurchaseController::class, ['only' => ['index', 'create', 'store']]);
+        Route::get('/my-purchases', [PurchaseController::class, 'myPurchases'])->name('my-purchases');
+    });
 });
 
 // ============================================
