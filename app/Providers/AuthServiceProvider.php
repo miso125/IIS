@@ -3,14 +3,14 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use App\Models\Vinoradek;
-use App\Models\Sklizen;
-use App\Models\Osetreni;
-use App\Models\Nakup;
-use App\Policies\VinoradekPolicy;
-use App\Policies\SklizenPolicy;
-use App\Policies\OsetreniPolicy;
-use App\Policies\NakupPolicy;
+use App\Models\WineyardRow;
+use App\Models\Harvest;
+use App\Models\Treatment;
+use App\Models\Purchase;
+use App\Policies\WineyardRowPolicy;
+use App\Policies\HarvestPolicy;
+use App\Policies\TreatmentPolicy;
+use App\Policies\PurchasePolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -18,10 +18,10 @@ class AuthServiceProvider extends ServiceProvider
      * Mapovanie modelov na policies
      */
     protected $policies = [
-        Vinoradek::class => VinoradekPolicy::class,
-        Sklizen::class => SklizenPolicy::class,
-        Osetreni::class => OsetreniPolicy::class,
-        Nakup::class => NakupPolicy::class,
+        WineyardRow::class => WineyardRowPolicy::class,
+        Harvest::class => HarvestPolicy::class,
+        Treatment::class => TreatmentPolicy::class,
+        Purchase::class => PurchasePolicy::class,
     ];
 
     /**
