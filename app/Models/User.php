@@ -13,6 +13,7 @@ class User extends Model
     protected $table = 'user';
     protected $primaryKey = 'login';
     protected $keyType = 'string';
+    public $incrementing = false;
     protected $guard_name = 'web';
     public $timestamps = false;
     protected $fillable = [
