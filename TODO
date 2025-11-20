@@ -1,0 +1,23 @@
+Laravel project: kroky ďalšieho postupu
+
+    Migrácie: Vytvoriť migrácie pre všetky entity podľa vyššie uvedenej štruktúry, zahrnúť cudzie kľúče a indexy.
+
+​
+
+Seedre: Pridať seedre pre rolové rozdelenie a ukážkové dáta.
+
+​
+
+Modely: Vytvoriť Eloquent modely a medzi nimi správne vzťahy (hasMany, belongsTo, hasOne, prípadne belongsToMany pre komplexné väzby).
+
+​
+
+Autentifikácia a role: Implementovať pomocou balíka ako je spatie/laravel-permission, alebo vlastnou implementáciou tabuliek pre role a práva.
+
+​
+
+5. Kontroléry a routovanie: Nadviazať na workflow pre jednotlivé role a zabezpečiť RESTful rozhranie.
+
+6. Front-end: Implementovať Blade šablóny podľa odporúčania Laravelu pre jednotlivé úlohy podľa rolí.
+
+7. Validácia a bezpečnosť: Zapracovať Laravel validácie, autentifikačné mechanizmy, a ustrážiť prístupy podľa rolí a požadovaných práv.
