@@ -45,8 +45,12 @@ class WineyardRowSeeder extends Seeder
         ];
 
         foreach ($winerows as $winerow) {
-            WineyardRow::create($winerow);
+            WineyardRow::updateOrCreate(
+                ['user' => $winerow['user'], 'variety' => $winerow['variety']],
+                $winerow
+            );
         }
+
 
         echo "✓ Vytvorených " . count($winerows) . " vinohradových riadkov\n";
     }

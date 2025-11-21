@@ -7,6 +7,21 @@
         <form action="{{ route('treatments.store') }}" method="POST">
             @csrf
 
+
+        <div class="form-group">
+            <label for="wine_row">Wine Row:</label>
+            <select class="form-control" id="wine_row" name="wine_row" required>
+                <option value="" disabled {{ old('wine_row') ? '' : 'selected' }}>Select a wine row</option>
+                @foreach($wineRows as $row)
+                    <option value="{{ $row->id_row }}" {{ old('wine_row') == $row->id_row ? 'selected' : '' }}>
+                        {{ $row->variety }} ({{ $row->planting_year }}) - {{ $row->colour }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+
+
             <div class="form-group">
                 <label for="type">Type:</label>
                 <select class="form-control" id="type" name="type" required>

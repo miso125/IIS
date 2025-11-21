@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Treatment;
+use App\Models\WineyardRow;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ class TreatmentController extends Controller
     {
         return [
             'auth',
-            'role:vinar|worker' => ['only' => ['create', 'store']],
+            'role:vinar|worker' => ['except' => ['show', 'index']],
         ];
     }
 
@@ -33,7 +34,8 @@ class TreatmentController extends Controller
      */
     public function create()
     {
-        return view('treatments.create');
+        $wineRows = WineyardRow::all();
+        return view('treatments.create', compact('wineRows'));
     }
 
     /**
@@ -43,23 +45,30 @@ class TreatmentController extends Controller
     {
         $validatedData = $request->validate([
             'type' => 'required|string|max:255',
+            'wine_row' => 'required|exists:wineyardrow,id_row',
             'spray_used' => 'nullable|string|max:255',
-            'concentration' => 'nullable|string|max:255',
+            'concentration' => 'nullable|numeric|between:0,100',
             'note' => 'nullable|string',
-            'planned_date' => 'nullable|date',
+            'planned_date' => 'nullable|date_format:d.m.Y',
             'is_completed' => 'nullable|boolean',
         ]);
 
-        if (!empty($validatedData['planned_date'])) {
-            $validatedData['planned_date'] = \Carbon\Carbon::parse($validatedData['planned_date'])
-                ->format('d.m.Y');
+        // Convert date format for database storage
+        if (isset($validatedData['planned_date'])) {
+            $validatedData['planned_date'] = \Carbon\Carbon::createFromFormat('d.m.Y', $validatedData['planned_date'])->format('Y-m-d');
         }
+
+        // Assign current user
+        $validatedData['user'] = auth()->user()->login;
+
+        // Assign current datetime for NOT NULL column
+        $validatedData['date_time'] = now();
 
         Treatment::create($validatedData);
 
-        return redirect()->route('dashboard')
-                        ->with('success', 'Treatment created successfully.');
+        return redirect()->route('dashboard')->with('success', 'Treatment created successfully.');
     }
+
 
 
     /**
@@ -83,13 +92,26 @@ class TreatmentController extends Controller
      */
     public function update(Request $request, Treatment $treatment)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
+        $validatedData = $request->validate([
+            'type' => 'required|string|max:255',
+            'wine_row' => 'required|exists:wineyardrow,id_row',
+            'spray_used' => 'nullable|string|max:255',
+            'concentration' => 'nullable|numeric|between:0,100',
+            'note' => 'nullable|string',
+            'planned_date' => 'nullable|date_format:d.m.Y',
+            'is_completed' => 'nullable|boolean',
         ]);
 
-        $treatment->update($validated);
+        // Convert date format for database storage
+        if (isset($validatedData['planned_date'])) {
+            $validatedData['planned_date'] = \Carbon\Carbon::createFromFormat('d.m.Y', $validatedData['planned_date'])->format('Y-m-d');
+        } else {
+            $validatedData['planned_date'] = null;
+        }
 
-        return redirect()->route('treatments.show', $treatment)->with('success', 'Treatment updated.');
+        $treatment->update($validatedData);
+
+        return redirect()->route('treatments.index')->with('success', 'Treatment updated successfully.');
     }
 
     /**

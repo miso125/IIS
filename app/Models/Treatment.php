@@ -16,6 +16,7 @@ class Treatment extends Model
         'wine_row',
         'user',
         'date_time',
+        'planned_date',
         'type',
         'treatment_product',
         'concentration',
