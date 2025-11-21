@@ -58,6 +58,7 @@ class AuthController extends Controller
             'login' => 'required|string|unique:user,login|max:50',
             'email' => 'required|email|unique:user,email|max:255',
             'name' => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
@@ -65,8 +66,12 @@ class AuthController extends Controller
             'login' => $validated['login'],
             'email' => $validated['email'],
             'name' => $validated['name'],
+            'last_name' => $validated['last_name'],
             'password_hash' => Hash::make($validated['password']),
             'isActive' => true,
+            'address' => 'N/A', // Optional: Add a default address or add an input field for it
+            'date_of_registration' => now(),
+            'role' => 'visitor',
         ]);
 
         // Assign customer role

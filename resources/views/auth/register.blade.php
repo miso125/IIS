@@ -132,16 +132,30 @@
                 @enderror
             </div>
 
-            <div class="mb-3">
-                <label for="name" class="form-label">
-                    <i class="fas fa-id-card"></i> Full Name
-                </label>
-                <input type="text" class="form-control @error('name') is-invalid @enderror" 
-                       id="name" name="name" value="{{ old('name') }}" 
-                       placeholder="Your full name" required>
-                @error('name')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="name" class="form-label">
+                        <i class="fas fa-id-card"></i> First Name
+                    </label>
+                    <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                        id="name" name="name" value="{{ old('name') }}" 
+                        placeholder="First Name" required>
+                    @error('name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label for="last_name" class="form-label">
+                        <i class="fas fa-id-card"></i> Last Name
+                    </label>
+                    <input type="text" class="form-control @error('last_name') is-invalid @enderror" 
+                        id="last_name" name="last_name" value="{{ old('last_name') }}" 
+                        placeholder="Last Name" required>
+                    @error('last_name')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
             </div>
 
             <div class="mb-3">
