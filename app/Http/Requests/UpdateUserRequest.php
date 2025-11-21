@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -12,7 +13,7 @@ class UpdateUserRequest extends FormRequest
     public function authorize(): bool
     {
         return auth()->check() && (
-            auth()->id() === $this->user->id || 
+            auth()->user()->login === $this->user->login || 
             auth()->user()->hasRole('admin')
         );
     }
@@ -28,7 +29,7 @@ class UpdateUserRequest extends FormRequest
             'email' => [
                 'sometimes',
                 'email',
-                Rule::unique('users', 'email')->ignore($this->user->id),
+                Rule::unique('user', 'email')->ignore($this->user->login, 'login'),
                 'max:255',
             ],
             'name' => [
@@ -47,9 +48,9 @@ class UpdateUserRequest extends FormRequest
             ],
             'role' => [
                 'sometimes',
-                'in:admin,vinar,worker,customer',
+                'exists:roles,name',
             ],
-            'is_active' => [
+            'isActive' => [
                 'boolean',
             ],
         ];

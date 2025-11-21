@@ -18,69 +18,41 @@
 
     <div class="card">
         <div class="table-responsive">
-            <table class="table table-hover mb-0">
-                <thead class="table-dark">
+            <table class="table table-striped">
+                <thead>
                     <tr>
                         <th>Login</th>
-                        <th>Email</th>
-                        <th>Full Name</th>
-                        <th>Role</th>
-                        <th>Status</th>
-                        <th>Registered</th>
+                        <th>Name</th>
+                        <th>Role</th> <th>Registered</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($users as $user)
-                        <tr>
-                            <td><strong>{{ $user->login }}</strong></td>
-                            <td>{{ $user->mail }}</td>
-                            <td>{{ $user->meno }} {{ $user->prijmeni }}</td>
-                            <td>
-                                <span class="badge bg-info">
-                                    {{ $user->roles->first()->name ?? 'N/A' }}
-                                </span>
-                            </td>
-                            <td>
-                                @if($user->isActive)
-                                    <span class="badge bg-success"><i class="fas fa-check"></i> Active</span>
-                                @else
-                                    <span class="badge bg-danger"><i class="fas fa-times"></i> Inactive</span>
-                                @endif
-                            </td>
-                            <td>{{ $user->date_of_registration->format('d.m.Y') }}</td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    @can('view user')
-                                        <a href="{{ route('users.show', $user) }}" class="btn btn-sm btn-info" title="View">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                    @endcan
-                                    @can('edit user')
-                                        <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-warning" title="Edit">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                    @endcan
-                                    @can('delete user')
-                                        <form action="{{ route('users.destroy', $user) }}" method="POST" style="display: inline;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" 
-                                                    onclick="return confirm('Are you sure?')" title="Delete">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    @endcan
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="7" class="text-center text-muted py-4">
-                                <i class="fas fa-inbox"></i> No users found
-                            </td>
-                        </tr>
-                    @endforelse
+                    @foreach($users as $user)
+                    <tr>
+                        <td>{{ $user->login }}</td>
+                        <td>{{ $user->name }} {{ $user->last_name }}</td>
+                        <td>
+                            @foreach($user->getRoleNames() as $role)
+                                <span class="badge bg-info">{{ $role }}</span>
+                            @endforeach
+                        </td>
+                        <td>{{ $user->date_of_registration->format('d.m.Y') }}</td>
+                        <td>
+                            <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            
+                            <form action="{{ route('users.destroy', $user) }}" method="POST" style="display:inline-block;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
                 </tbody>
             </table>
         </div>

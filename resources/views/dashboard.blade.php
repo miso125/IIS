@@ -113,6 +113,13 @@
                 </div>
             </div>
         </div>
+        <div class="row mt-4">
+            <div class="col-12 text-center">
+                <a href="{{ route('users.index') }}" class="btn btn-dark btn-lg">
+                    <i class="fas fa-users-cog"></i> Manage All Users
+                </a>
+            </div>
+        </div>
     @endrole
 
     <!-- Vinar Dashboard -->

@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
 class StoreUserRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->check() && auth()->user()->hasPermissionTo('create user');
+        return auth()->check() && auth()->user()->hasRole('admin');
     }
 
     /**
@@ -23,12 +24,12 @@ class StoreUserRequest extends FormRequest
     {
         return [
             'login' => 'required|string|unique:user,login|max:50|regex:/^[a-zA-Z0-9_]+$/',
-            'password_hash' => 'required|string|min:8|max:255',
+            'password' => 'required|string|min:8|max:255',
             'email' => 'required|email|unique:user,email|max:255',
             'name' => 'required|string|max:100',
             'last_name' => 'required|string|max:100',
-            'address' => 'required|string|max:255',
-            'role' => 'required|in:admin,winemaker,worker,customer,visitor',
+            'address' => 'string|max:255',
+            'role' => 'required|exists:roles,name',
         ];
     }
     

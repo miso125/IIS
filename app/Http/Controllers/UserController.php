@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller implements HasMiddleware
 {
@@ -39,7 +41,8 @@ class UserController extends Controller implements HasMiddleware
     {
         $this->authorize('create', User::class);
         
-        return view('users.create');
+        $roles = Role::all();
+        return view('users.create', compact('roles'));
     }
 
     /**
@@ -48,17 +51,26 @@ class UserController extends Controller implements HasMiddleware
     public function store(StoreUserRequest $request)
     {
         $this->authorize('create', User::class);
-        
+
         $validated = $request->validated();
-        $validated['password_hash'] = bcrypt($validated['password_hash']);
         
-        $user = User::create($validated);
-        
-        // Pridelenie role podľa vytvoreného poľa 'role'
+        $user = User::create([
+            'login' => $validated['login'],
+            'name' => $validated['name'],
+            'last_name' => $validated['last_name'],
+            'email' => $validated['email'],
+            'password_hash' => Hash::make($validated['password']), // Hashovanie hesla
+            'isActive' => $request->has('isActive'), // Checkbox vracia true/false
+            'address' => 'N/A', // Predvolená hodnota, ak nemáte pole v formulári
+            'date_of_registration' => now(),
+            'role' => $validated['role'],
+        ]);
+
+        // 4. Priradenie roly
         $user->assignRole($validated['role']);
-        
-        return redirect()->route('users.show', $user)
-            ->with('success', 'User created succesfully.');
+
+        return redirect()->route('users.index')
+            ->with('success', 'User created successfully.');
     }
 
     /**
@@ -77,8 +89,8 @@ class UserController extends Controller implements HasMiddleware
     public function edit(User $user)
     {
         $this->authorize('update', $user);
-        
-        return view('users.edit', compact('user'));
+        $roles = Role::all();
+        return view('users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -88,23 +100,25 @@ class UserController extends Controller implements HasMiddleware
     {
         $this->authorize('update', $user);
         
-        $validated = $request->validated();
-        
-        if (!empty($validated['password_hash'])) {
-            $validated['password_hash'] = bcrypt($validated['password_hash']);
-        } else {
-            unset($validated['password_hash']);
-        }
-        
-        $user->update($validated);
-        
-        // Synchronizácia role
-        if (isset($validated['role'])) {
-            $user->syncRoles($validated['role']);
-        }
-        
-        return redirect()->route('users.show', $user)
-            ->with('success', 'User updated.');
+        $validated = $request->validate([
+            'name' => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
+            'email' => 'required|email|max:255|unique:user,email,' . $user->login . ',login',
+            'role' => 'required|exists:roles,name', // Validate role exists
+        ]);
+
+        // Update basic details
+        $user->update([
+            'name' => $validated['name'],
+            'last_name' => $validated['last_name'],
+            'email' => $validated['email'],
+        ]);
+
+        // Sync the role (Spatie)
+        $user->syncRoles([$validated['role']]);
+
+        return redirect()->route('users.index')
+            ->with('success', 'User updated successfully.');
     }
 
     /**
@@ -115,8 +129,7 @@ class UserController extends Controller implements HasMiddleware
         $this->authorize('delete', $user);
         
         $user->delete();
-        
-        return redirect()->route('user.index')
-            ->with('success', 'User deleted.');
+        return redirect()->route('users.index')
+            ->with('success', 'User deleted successfully.');
     }
 }
