@@ -36,7 +36,7 @@ class DashboardController extends Controller
     {
         return view('dashboard', [
             'totalUsers' => User::count(),
-            'activeUsers' => User::where('is_active', true)->count(),
+            'activeUsers' => User::where('isActive', true)->count(),
             'totalVineyards' => WineyardRow::count(),
             'totalHarvests' => Harvest::count(),
             'recentUsers' => User::latest('created_at')->limit(5)->get(),
