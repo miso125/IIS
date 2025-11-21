@@ -39,7 +39,6 @@ class DashboardController extends Controller
             'activeUsers' => User::where('isActive', true)->count(),
             'totalVineyards' => WineyardRow::count(),
             'totalHarvests' => Harvest::count(),
-            'recentUsers' => User::latest('created_at')->limit(5)->get(),
         ]);
     }
 
