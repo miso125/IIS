@@ -14,7 +14,7 @@
                 <option value="" disabled {{ old('wine_row') ? '' : 'selected' }}>Select a wine row</option>
                 @foreach($wineRows as $row)
                     <option value="{{ $row->id_row }}" {{ old('wine_row') == $row->id_row ? 'selected' : '' }}>
-                        {{ $row->variety }} ({{ $row->planting_year }}) - {{ $row->colour }}
+                        {{ $row->id_row }}
                     </option>
                 @endforeach
             </select>
@@ -85,6 +85,7 @@
         flatpickr("#planned_date", {
             dateFormat: "d.m.Y",
             defaultDate: "{{ now()->format('d.m.Y') }}",   // today by default
+            minDate: "today",
         });
 
         // Existing logic for showing chemical fields
