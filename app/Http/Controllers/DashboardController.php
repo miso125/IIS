@@ -87,8 +87,8 @@ class DashboardController extends Controller
 
         return view('dashboard', [
             'myPurchases' => $user->purchases()->count(),
-            'totalSpent' => $user->purchases()->sum('amount'),
-            'availableWines' => WineBatch::where('in_stock', true)->count(),
+            'totalSpent' => $user->purchases()->sum('sum'),
+            'availableWines' => WineBatch::where('number_of_bottles', '>', 0)->count(),
         ]);
     }
 }
