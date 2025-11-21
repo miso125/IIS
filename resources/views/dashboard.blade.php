@@ -6,7 +6,7 @@
     <div class="row mb-4">
         <div class="col-12">
             <h1 class="mb-1">
-                <i class="fas fa-dashboard"></i> Welcome, {{ auth()->user()->meno }}!
+                <i class="fas fa-dashboard"></i> Welcome, {{ auth()->user()->name }}!
             </h1>
             <p class="text-muted">You are logged in as <strong>{{ auth()->user()->roles->first()->name ?? 'User' }}</strong></p>
         </div>
