@@ -174,8 +174,9 @@
             <small>
                 <i class="fas fa-user-tie"></i> Admin: <code>admin</code> / <code>admin123</code><br>
                 <i class="fas fa-leaf"></i> Vinar: <code>vinar1</code> / <code>heslo123</code><br>
-                <i class="fas fa-hammer"></i> Worker: <code>worker1</code> / <code>heslo123</code><br>
-                <i class="fas fa-user"></i> Customer: <code>customer1</code> / <code>heslo123</code>
+                <i class="fas fa-hammer"></i> Worker: <code>pracovnik1</code> / <code>heslo123</code><br>
+                <i class="fas fa-user"></i> Customer: <code>zakaznik1</code> / <code>heslo123</code><br>
+                <i class="fas fa-user"></i> Customer: <code>zakaznik2</code> / <code>heslo123</code>
             </small>
         </div>
     </div>

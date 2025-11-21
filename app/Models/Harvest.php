@@ -14,7 +14,7 @@ class Harvest extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'wine_yard',
+        'wine_row',
         'user',
         'weight_grapes',
         'variety',
@@ -24,7 +24,7 @@ class Harvest extends Model
 
     public function winerow(): BelongsTo
     {
-        return $this->belongsTo(WineyardRow::class, 'wine_yard', 'id_row');
+        return $this->belongsTo(WineyardRow::class, 'wine_row', 'id_row');
     }
 
 

@@ -31,10 +31,20 @@
         }
 
         .hero {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            /* The overlay is first (linear-gradient), then the image URL */
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                        url('/images/vineyard.jpg');
+            
+            /* This ensures the image covers the whole area and stays centered */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            
+            /* Standard styling */
             color: white;
-            padding: 100px 0;
+            padding: 150px 0; /* Increased padding slightly for better visual balance */
             text-align: center;
+            position: relative;
         }
 
         .hero h1 {

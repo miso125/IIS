@@ -11,7 +11,7 @@ class StoreUserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return auth()->user()->hasPermissionTo('create user');
+        return auth()->check() && auth()->user()->hasPermissionTo('create user');
     }
 
     /**
@@ -35,10 +35,23 @@ class StoreUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'login.unique' => 'Tento login je už zaregistrovaný.',
-            'login.regex' => 'Login môže obsahovať len písmená, čísla a podčiarkovník.',
-            'email.unique' => 'Tento email je už zaregistrovaný.',
-            'role.in' => 'Vybrala si neplatnú rolu.',
+            'login.required' => 'Login is required',
+            'login.unique' => 'This login is already taken',
+            'login.regex' => 'Login can only contain letters, numbers, dots, dashes, and underscores',
+            'email.required' => 'Email is required',
+            'email.email' => 'Email must be valid',
+            'email.unique' => 'This email is already registered',
+            'name.required' => 'Full name is required',
+            'password.required' => 'Password is required',
+            'password.regex' => 'Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)',
+            'role.in' => 'Invalid role selected',
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'is_active' => $this->boolean('is_active', true),
+        ]);
     }
 }

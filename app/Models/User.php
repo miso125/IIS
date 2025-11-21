@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Permission\Traits\HasRoles;
 
 // TODO continue to english
-class User extends Model
+class User extends Authenticable
 {
     use HasRoles;
     protected $table = 'user';
@@ -27,7 +27,14 @@ class User extends Model
         'isActive',
         'date_of_registration',
     ];
-
+    protected $casts = [
+        'date_of_registration' => 'datetime', // Converts string to Carbon object
+        'isActive' => 'boolean',              // Converts 0/1 to false/true
+    ];
+    public function getAuthPasswordName()
+    {
+        return 'password_hash';
+    }
     public function wineyardrows(): HasMany
     {
         return $this->hasMany(WineyardRow::class, 'user', 'login');

@@ -51,10 +51,10 @@ class DashboardController extends Controller
         $user = auth()->user();
 
         return view('dashboard', [
-            'myVineyards' => $user->vineyards()->count(),
-            'myVineyardsList' => $user->vineyards()->paginate(5),
+            'myVineyards' => $user->wineyardrows()->count(),
+            'myVineyardsList' => $user->wineyardrows()->paginate(5),
             'totalHarvests' => $user->harvests()->count(),
-            'totalBatches' => WineBatch::whereHas('harvest.vineyard', function($q) use ($user) {
+            'totalBatches' => WineBatch::whereHas('harvest.winerow', function($q) use ($user) {
                 $q->where('user_id', $user->id);
             })->count(),
             'totalTreatments' => $user->treatments()->count(),

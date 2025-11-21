@@ -48,7 +48,7 @@
                                     <span class="badge bg-danger"><i class="fas fa-times"></i> Inactive</span>
                                 @endif
                             </td>
-                            <td>{{ $user->datum_registrace->format('d.m.Y') }}</td>
+                            <td>{{ $user->date_of_registration->format('d.m.Y') }}</td>
                             <td>
                                 <div class="btn-group" role="group">
                                     @can('view user')

@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreHarvestRequest extends FormRequest
+class StoreWineBatchRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return auth()->check() && auth()->user()->hasPermissionTo('create harvest');
+        return auth()->check() && auth()->user()->hasPermissionTo('create winebatch');
     }
 
     /**
@@ -22,16 +22,16 @@ class StoreHarvestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'id_harvest' => [
+            'harvest' => [
                 'required',
                 'integer',
-                'exists:vineyards,id',
+                'exists:harvests,id',
             ],
-            'weight_grapes' => [
+            'vintage' => [
                 'required',
-                'numeric',
-                'min:0.1',
-                'max:100000',
+                'integer',
+                'min:1900',
+                'max:' . now()->year,
             ],
             'variety' => [
                 'required',
@@ -44,6 +44,18 @@ class StoreHarvestRequest extends FormRequest
                 'min:0',
                 'max:30',
             ],
+            'alcohol_percentage' => [
+                'required',
+                'numeric',
+                'min:0',
+                'max:25',
+            ],
+            'number_of_bottles' => [
+                'required',
+                'integer',
+                'min:1',
+                'max:100000',
+            ],
             'date_time' => [
                 'required',
                 'date',
@@ -55,10 +67,9 @@ class StoreHarvestRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'vineyard_id.exists' => 'Selected vineyard does not exist',
-            'grape_weight.numeric' => 'Grape weight must be a valid number',
-            'sugar_content.numeric' => 'Sugar content must be a valid number',
-            'date_time.before_or_equal' => 'Harvest date cannot be in the future',
+            'harvest.exists' => 'Selected harvest does not exist',
+            'alcohol_percentage.max' => 'Alcohol percentage cannot exceed 25%',
+            'number_of_bottles.min' => 'Must produce at least 1 bottle',
         ];
     }
 }

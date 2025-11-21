@@ -28,14 +28,14 @@ class WineyardRowController extends Controller implements HasMiddleware
         $winerows = WineyardRow::with('user')
             ->paginate(15);
         
-        return view('vinerows.index', compact('winerows'));
+        return view('vineyards.index', compact('winerows'));
     }
 
     public function create()
     {
         $this->authorize('create', WineyardRow::class);
         
-        return view('winerows.create');
+        return view('vineyards.create');
     }
 
     public function store(StoreWineyardRowRequest $request)
@@ -49,7 +49,7 @@ class WineyardRowController extends Controller implements HasMiddleware
         
         $winerow = WineyardRow::create($validated);
         
-        return redirect()->route('winerows.show', $winerow)
+        return redirect()->route('vineyards.show', $winerow)
             ->with('success', 'Wineyard Row created.');
     }
 
@@ -60,14 +60,14 @@ class WineyardRowController extends Controller implements HasMiddleware
         $harvests = $winerow->harvests()->paginate(10);
         $treatments = $winerow->treatments()->paginate(10);
         
-        return view('winerows.show', compact('winerow', 'harvests', 'treatments'));
+        return view('vineyards.show', compact('winerow', 'harvests', 'treatments'));
     }
 
     public function edit(WineyardRow $winerow)
     {
         $this->authorize('update', $winerow);
         
-        return view('winerows.edit', compact('winerow'));
+        return view('vineyards.edit', compact('winerow'));
     }
 
     public function update(UpdateWineyardRowRequest $request, WineyardRow $winerow)
@@ -77,7 +77,7 @@ class WineyardRowController extends Controller implements HasMiddleware
         $validated = $request->validated();
         $winerow->update($validated);
         
-        return redirect()->route('winerows.show', $winerow)
+        return redirect()->route('vineyards.show', $winerow)
             ->with('success', 'Wineyard Row updated.');
     }
 
@@ -87,7 +87,7 @@ class WineyardRowController extends Controller implements HasMiddleware
         
         $winerow->delete();
         
-        return redirect()->route('winerows.index')
+        return redirect()->route('vineyards.index')
             ->with('success', 'Wineyard Row deleted.');
     }
 }

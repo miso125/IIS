@@ -8,7 +8,7 @@ class StoreWineyardRowRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return auth()->user()->hasPermissionTo('create winerow');
+        return auth()->check() && auth()->user()->hasPermissionTo('create winerow');
     }
 
     public function rules(): array
