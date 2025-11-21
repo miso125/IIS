@@ -55,8 +55,8 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validated = $request->validate([
-            'login' => 'required|string|unique:users,login|max:50',
-            'email' => 'required|email|unique:users,email|max:255',
+            'login' => 'required|string|unique:user,login|max:50',
+            'email' => 'required|email|unique:user,email|max:255',
             'name' => 'required|string|max:100',
             'password' => 'required|string|min:8|confirmed',
         ]);
@@ -65,8 +65,8 @@ class AuthController extends Controller
             'login' => $validated['login'],
             'email' => $validated['email'],
             'name' => $validated['name'],
-            'password' => Hash::make($validated['password']),
-            'is_active' => true,
+            'password_hash' => Hash::make($validated['password']),
+            'isActive' => true,
         ]);
 
         // Assign customer role
