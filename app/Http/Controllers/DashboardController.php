@@ -67,11 +67,11 @@ class DashboardController extends Controller
     private function workerDashboard()
     {
         return view('dashboard', [
-            'recentTreatments' => Treatment::where('user_id', auth()->id())
+            'recentTreatments' => Treatment::where('user', auth()->id())
                 ->latest('date_time')
                 ->limit(5)
                 ->get(),
-            'recentHarvests' => Harvest::where('user_id', auth()->id())
+            'recentHarvests' => Harvest::where('user', auth()->id())
                 ->latest('date_time')
                 ->limit(5)
                 ->get(),
