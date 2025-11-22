@@ -30,11 +30,11 @@
                                     <td class="ps-4">{{ $purchase->date_time->format('d.m.Y H:i:s') }}</td>
                                     <td>
                                         <span class="fw-bold text-primary">
-                                            {{ $item->batch->harvestDetail->winerow->variety ?? 'Víno' }}
+                                            {{ $item->batch->harvestDetail->wineyardrow->variety ?? 'Víno' }}
                                         </span>
                                         <br>
                                         <small class="text-muted">
-                                            Ročník {{ $item->batch->harvestDetail->year ?? '-' }}
+                                            Ročník {{ $item->batch->vintage ?? '-' }}
                                         </small>
                                     </td>
                                     <td class="text-center">
