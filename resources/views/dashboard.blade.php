@@ -123,7 +123,7 @@
     @endrole
 
     <!-- Vinar Dashboard -->
-    @role('vinar')
+    @role('winemaker')
         <div class="row">
             <div class="col-md-3">
                 <div class="card text-center">
