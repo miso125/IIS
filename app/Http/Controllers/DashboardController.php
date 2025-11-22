@@ -36,7 +36,7 @@ class DashboardController extends Controller
     {
         return view('dashboard', [
             'totalUsers' => User::count(),
-            'activeUsers' => User::where('isActive', true)->count(),
+            'activeUsers' => User::where('is_active', true)->count(),
             'totalVineyards' => WineyardRow::count(),
             'totalHarvests' => Harvest::count(),
             'recentUsers' => User::get(),
@@ -87,7 +87,7 @@ class DashboardController extends Controller
 
         return view('dashboard', [
             'myPurchases' => $user->purchases()->count(),
-            'totalSpent' => $user->purchases()->sum('sum'),
+            'totalSpent' => $user->purchases()->total_price('total_price'),
             'availableWines' => WineBatch::where('number_of_bottles', '>', 0)->count(),
         ]);
     }

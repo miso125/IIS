@@ -29,7 +29,7 @@
                                     <td>{{ $purchase->date_time->format('d.m.Y H:i') }}</td>
                                     <td>
                                         <strong>
-                                            {{ $item->wineBatch->harvest->vineyard->odroda ?? 'Unknown Wine' }}
+                                            {{ $item->wineBatch->harvest->vineyard->variety ?? 'Unknown Wine' }}
                                         </strong>
                                         <br>
                                         <small class="text-muted">

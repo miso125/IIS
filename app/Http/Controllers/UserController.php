@@ -60,7 +60,7 @@ class UserController extends Controller implements HasMiddleware
             'last_name' => $validated['last_name'],
             'email' => $validated['email'],
             'password_hash' => Hash::make($validated['password']), // Hashovanie hesla
-            'isActive' => $request->has('isActive'), // Checkbox vracia true/false
+            'is_active' => $request->has('is_active'), // Checkbox vracia true/false
             'address' => 'N/A', // Predvolená hodnota, ak nemáte pole v formulári
             'date_of_registration' => now(),
             'role' => $validated['role'],

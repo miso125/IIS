@@ -68,7 +68,7 @@ class AuthController extends Controller
             'name' => $validated['name'],
             'last_name' => $validated['last_name'],
             'password_hash' => Hash::make($validated['password']),
-            'isActive' => true,
+            'is_active' => true,
             'address' => 'N/A', // Optional: Add a default address or add an input field for it
             'date_of_registration' => now(),
             'role' => 'visitor',
