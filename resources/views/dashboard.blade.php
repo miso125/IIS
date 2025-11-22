@@ -179,7 +179,10 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header bg-dark text-white">
-                        <h5 class="mb-0"><i class="fas fa-leaf"></i> My Vineyards</h5>
+                        <h5 class="mb-0"><i class="fas fa-leaf"></i> My Vineyards</h5><br>
+                        <a href="{{ route('vineyards.index') }}" class="btn btn-sm btn-light text-dark">
+                            View All <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
@@ -204,9 +207,6 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <a href="{{ route('vineyards.show', $vineyard) }}" class="btn btn-sm btn-info">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
                                             <a href="{{ route('vineyards.edit', $vineyard) }}" class="btn btn-sm btn-warning">
                                                 <i class="fas fa-edit"></i>
                                             </a>

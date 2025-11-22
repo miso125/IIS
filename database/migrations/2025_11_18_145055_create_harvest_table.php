@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('harvest', function (Blueprint $table) {
             $table->id('id_harvest');
-            $table->foreignId('wine_row')->constrained('wineyardrow', 'id_row')->onDelete('restrict');
+            $table->foreignId('wine_row')->constrained('wineyardrow', 'id_row')->onDelete('cascade');
             $table->string('user');
             $table->foreign('user')->references('login')->on('user')->onDelete('restrict');
             $table->integer('weight_grapes');

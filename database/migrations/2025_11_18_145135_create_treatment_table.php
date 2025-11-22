@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('treatment', function (Blueprint $table) {
             $table->id('id_treatment');
-            $table->foreignId('wine_row')->constrained('wineyardrow', 'id_row')->onDelete('restrict');
+            $table->foreignId('wine_row')->constrained('wineyardrow', 'id_row')->onDelete('cascade');
             $table->string('user');
             $table->foreign('user')->references('login')->on('user')->onDelete('restrict');
             $table->dateTime('date_time');

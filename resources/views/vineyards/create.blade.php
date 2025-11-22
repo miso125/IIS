@@ -5,69 +5,62 @@
 @section('content')
     <div class="row">
         <div class="col-md-8 offset-md-2">
-            <h2 class="mb-4"><i class="fas fa-plus"></i> Add New Vineyard</h2>
-
-            <div class="card">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0"><i class="fas fa-plus"></i> Add New Vineyard</h4>
+                </div>
                 <div class="card-body">
                     <form action="{{ route('vineyards.store') }}" method="POST">
                         @csrf
 
                         <div class="mb-3">
-                            <label for="odroda" class="form-label">Variety <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control @error('odroda') is-invalid @enderror" 
-                                   id="odroda" name="odroda" value="{{ old('odroda') }}" required>
-                            @error('odroda')
+                            <label for="variety" class="form-label">Variety <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('variety') is-invalid @enderror" 
+                                   id="variety" name="variety" value="{{ old('variety') }}" required>
+                            @error('variety')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="pocet_hlav" class="form-label">Number of Heads <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control @error('pocet_hlav') is-invalid @enderror" 
-                                   id="pocet_hlav" name="pocet_hlav" value="{{ old('pocet_hlav') }}" min="1" required>
-                            @error('pocet_hlav')
+                            <label for="number_of_vines" class="form-label">Number of Vines <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control @error('number_of_vines') is-invalid @enderror" 
+                                   id="number_of_vines" name="number_of_vines" value="{{ old('number_of_vines') }}" min="1" required>
+                            @error('number_of_vines')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="rok_vysadby" class="form-label">Planted Year <span class="text-danger">*</span></label>
-                            <input type="number" class="form-control @error('rok_vysadby') is-invalid @enderror" 
-                                   id="rok_vysadby" name="rok_vysadby" value="{{ old('rok_vysadby', now()->year) }}" 
+                            <label for="planting_year" class="form-label">Planting Year <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control @error('planting_year') is-invalid @enderror" 
+                                   id="planting_year" name="planting_year" value="{{ old('planting_year', now()->year) }}" 
                                    min="1900" max="{{ now()->year }}" required>
-                            @error('rok_vysadby')
+                            @error('planting_year')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="barva" class="form-label">Color <span class="text-danger">*</span></label>
-                            <select class="form-select @error('barva') is-invalid @enderror" id="barva" name="barva" required>
+                            <label for="colour" class="form-label">Color <span class="text-danger">*</span></label>
+                            <select class="form-select @error('colour') is-invalid @enderror" id="colour" name="colour" required>
                                 <option value="">-- Select Color --</option>
-                                <option value="white" {{ old('barva') == 'white' ? 'selected' : '' }}>White</option>
-                                <option value="red" {{ old('barva') == 'red' ? 'selected' : '' }}>Red</option>
+                                <option value="white" {{ old('colour') == 'white' ? 'selected' : '' }}>White</option>
+                                <option value="red" {{ old('colour') == 'red' ? 'selected' : '' }}>Red</option>
+                                <option value="pink" {{ old('colour') == 'pink' ? 'selected' : '' }}>Pink</option>
                             </select>
-                            @error('barva')
+                            @error('colour')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
-                        <div class="mb-3">
-                            <label for="zodpovedna_os" class="form-label">Responsible Person</label>
-                            <input type="text" class="form-control @error('zodpovedna_os') is-invalid @enderror" 
-                                   id="zodpovedna_os" name="zodpovedna_os" value="{{ old('zodpovedna_os') }}">
-                            @error('zodpovedna_os')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="form-group">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Create Vineyard
-                            </button>
+                        <div class="d-flex justify-content-between mt-4">
                             <a href="{{ route('vineyards.index') }}" class="btn btn-secondary">
                                 <i class="fas fa-times"></i> Cancel
                             </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Create Vineyard
+                            </button>
                         </div>
                     </form>
                 </div>

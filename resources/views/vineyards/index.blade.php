@@ -8,7 +8,7 @@
             <h2><i class="fas fa-leaf"></i> My Vineyards</h2>
         </div>
         <div class="col-md-4 text-end">
-            @can('create vineyard')
+            @can('create winerow') {{-- Opravený názov permission --}}
                 <a href="{{ route('vineyards.create') }}" class="btn btn-primary">
                     <i class="fas fa-plus"></i> Add Vineyard
                 </a>
@@ -17,48 +17,43 @@
     </div>
 
     <div class="row">
-        @forelse($vineyards as $vineyard)
+        {{-- V controlleri posielame premennú $winerows, nie $vineyards --}}
+        @forelse($winerows as $vineyard)
             <div class="col-md-6 col-lg-4 mb-4">
-                <div class="card h-100">
+                <div class="card h-100 shadow-sm">
                     <div class="card-header" 
-                         style="background-color: {{ $vineyard->barva == 'white' ? '#f5f0e8' : '#8B0000' }}; color: #000;">
-                        <h5 class="mb-0">{{ $vineyard->odroda }}</h5>
+                         style="background-color: {{ $vineyard->colour == 'white' ? '#f5f0e8' : '#8B0000' }}; 
+                                color: {{ $vineyard->colour == 'white' ? '#000' : '#fff' }};">
+                        <h5 class="mb-0 fw-bold">{{ $vineyard->variety }}</h5>
                     </div>
                     <div class="card-body">
                         <p class="mb-2">
-                            <strong><i class="fas fa-leaf"></i> Heads:</strong> {{ $vineyard->pocet_hlav }}
+                            <strong><i class="fas fa-leaf"></i> Vines:</strong> {{ $vineyard->number_of_vines }}
                         </p>
                         <p class="mb-2">
-                            <strong><i class="fas fa-calendar"></i> Planted:</strong> {{ $vineyard->rok_vysadby }}
+                            <strong><i class="fas fa-calendar"></i> Planted:</strong> {{ $vineyard->planting_year }}
                         </p>
                         <p class="mb-3">
                             <strong><i class="fas fa-palette"></i> Color:</strong>
-                            <span class="badge" style="background-color: {{ $vineyard->barva == 'white' ? '#ffc107' : '#8B0000' }};">
-                                {{ ucfirst($vineyard->barva) }}
+                            <span class="badge bg-secondary">
+                                {{ ucfirst($vineyard->colour) }}
                             </span>
                         </p>
-                        <p class="text-muted small">
-                            <i class="fas fa-info-circle"></i> Responsible: {{ $vineyard->zodpovedna_os }}
-                        </p>
                     </div>
-                    <div class="card-footer bg-light">
-                        <div class="btn-group w-100" role="group">
-                            @can('view vineyard')
-                                <a href="{{ route('vineyards.show', $vineyard) }}" class="btn btn-sm btn-info">
-                                    <i class="fas fa-eye"></i> View
-                                </a>
-                            @endcan
-                            @can('edit vineyard')
-                                <a href="{{ route('vineyards.edit', $vineyard) }}" class="btn btn-sm btn-warning">
+                    <div class="card-footer bg-light border-top-0">
+                        <div class="d-flex justify-content-between gap-2">
+                            @can('edit winerow')
+                                <a href="{{ route('vineyards.edit', $vineyard) }}" class="btn btn-sm btn-warning flex-fill">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
                             @endcan
-                            @can('delete vineyard')
-                                <form action="{{ route('vineyards.destroy', $vineyard) }}" method="POST" style="display: inline; flex: 1;">
+
+                            @can('delete winerow')
+                                <form action="{{ route('vineyards.destroy', $vineyard) }}" method="POST" class="flex-fill">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger w-100"
-                                            onclick="return confirm('Delete this vineyard?')">
+                                            onclick="return confirm('Are you sure you want to delete this vineyard? All harvests associated with it will be affected.')">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </form>
@@ -69,20 +64,15 @@
             </div>
         @empty
             <div class="col-12">
-                <div class="alert alert-info" role="alert">
-                    <i class="fas fa-info-circle"></i> <strong>No vineyards yet.</strong>
-                    @can('create vineyard')
-                        <a href="{{ route('vineyards.create') }}" class="alert-link">Create your first vineyard</a>
-                    @endcan
+                <div class="alert alert-info">
+                    No vineyards found. 
+                    <a href="{{ route('vineyards.create') }}">Create one now</a>.
                 </div>
             </div>
         @endforelse
     </div>
 
-    <!-- Pagination -->
-    @if($vineyards instanceof \Illuminate\Pagination\Paginator)
-        <div class="d-flex justify-content-center mt-4">
-            {{ $vineyards->links() }}
-        </div>
-    @endif
+    <div class="d-flex justify-content-center mt-4">
+        {{ $winerows->links() }}
+    </div>
 @endsection

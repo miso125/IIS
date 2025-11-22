@@ -25,8 +25,12 @@ class WineyardRowController extends Controller implements HasMiddleware
     {
         $this->authorize('viewAny', WineyardRow::class);
         
-        $winerows = WineyardRow::with('user')
-            ->paginate(15);
+        if (auth()->user()->hasRole('admin')) {
+            $winerows = WineyardRow::with('owner')->paginate(15);
+        } else {
+            $winerows = WineyardRow::where('user', auth()->user()->login) // Filtrujeme podľa loginu
+                        ->paginate(15);
+        }
         
         return view('vineyards.index', compact('winerows'));
     }
@@ -45,11 +49,11 @@ class WineyardRowController extends Controller implements HasMiddleware
         $validated = $request->validated();
         
         // Automaticky pridelíme aktuálneho užívateľa ako vlastníka
-        $validated['user'] = auth()->id();
+        $validated['user'] = auth()->user()->login;
         
         $winerow = WineyardRow::create($validated);
         
-        return redirect()->route('vineyards.show', $winerow)
+        return redirect()->route('vineyards.index'  )
             ->with('success', 'Wineyard Row created.');
     }
 
@@ -63,29 +67,38 @@ class WineyardRowController extends Controller implements HasMiddleware
         return view('vineyards.show', compact('winerow', 'harvests', 'treatments'));
     }
 
-    public function edit(WineyardRow $winerow)
+    public function edit(WineyardRow $vineyard) // Laravel automaticky nájde podľa ID v route
     {
-        $this->authorize('update', $winerow);
+        $this->authorize('update', $vineyard);
         
-        return view('vineyards.edit', compact('winerow'));
+        // Do view posielame premennú $vineyard
+        return view('vineyards.edit', compact('vineyard'));
     }
 
-    public function update(UpdateWineyardRowRequest $request, WineyardRow $winerow)
+    public function update(UpdateWineyardRowRequest $request, WineyardRow $vineyard)
     {
-        $this->authorize('update', $winerow);
+        $this->authorize('update', $vineyard);
         
-        $validated = $request->validated();
-        $winerow->update($validated);
+        // Na UpdateWineyardRowRequest musíte pridať pravidlá (rules), inak validated() bude prázdne!
+        // Pre teraz použijeme StoreWineyardRowRequest alebo skopírujte pravidlá
+        $validated = $request->validate([
+            'variety' => 'required|string|max:100',
+            'number_of_vines' => 'required|integer|min:1|max:500',
+            'planting_year' => 'required|integer|min:1900|max:' . now()->year,
+            'colour' => 'required|in:white,red,pink',
+        ]);
+
+        $vineyard->update($validated);
         
-        return redirect()->route('vineyards.show', $winerow)
-            ->with('success', 'Wineyard Row updated.');
+        return redirect()->route('vineyards.index')
+            ->with('success', 'Vineyard updated successfully.');
     }
 
-    public function destroy(WineyardRow $winerow)
+    public function destroy(WineyardRow $vineyard)
     {
-        $this->authorize('delete', $winerow);
+        $this->authorize('delete', $vineyard);
         
-        $winerow->delete();
+        $vineyard->delete();
         
         return redirect()->route('vineyards.index')
             ->with('success', 'Wineyard Row deleted.');

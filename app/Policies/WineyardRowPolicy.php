@@ -50,6 +50,14 @@ class WineyardRowPolicy
      */
     public function delete(User $user, WineyardRow $winerow): bool
     {
+        if ($user->login !== $winerow->user) {
+            dd([
+                'User Login (Prihlásený)' => $user->login,
+                'Vineyard Owner (Z DB)' => $winerow->user,
+                'Permission Check' => $user->hasPermissionTo('delete winerow'),
+                'Is Admin?' => $user->hasRole('admin')
+            ]);
+        }
         return $user->hasPermissionTo('delete winerow') &&
                $user->login === $winerow->user;
     }

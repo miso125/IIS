@@ -76,6 +76,7 @@ class RoleSeeder extends Seeder
             $perms['view_winerow'],
             $perms['create_winerow'],
             $perms['edit_winerow'],
+            $perms['delete_winerow'],
             $perms['view_treatment'],
             $perms['create_winerow'],
             $perms['edit_winerow'],

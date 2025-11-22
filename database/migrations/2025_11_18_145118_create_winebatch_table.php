@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('winebatch', function (Blueprint $table) {
             $table->id('batch_number');
-            $table->foreignId('harvest')->constrained('harvest', 'id_harvest')->onDelete('restrict');
+            $table->foreignId('harvest')->constrained('harvest', 'id_harvest')->onDelete('cascade');
             $table->integer('vintage');
             $table->string('variety');
             $table->integer('sugariness');
