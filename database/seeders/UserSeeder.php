@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Vinič',
                 'address' => 'Vinohradnícka 5, Modra',
                 'role' => 'winemaker',
-                'isActive' => true,
+                'is_active' => true,
                 'date_of_registration' => now()->subDays(180),
             ],
             [
@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Robotník',
                 'address' => 'Hlavná 12, Pezinok',
                 'role' => 'worker',
-                'isActive' => true,
+                'is_active' => true,
                 'date_of_registration' => now()->subDays(90),
             ],
             [
@@ -45,7 +45,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Kúpil',
                 'address' => 'Nová 8, Bratislava',
                 'role' => 'customer',
-                'isActive' => true,
+                'is_active' => true,
                 'date_of_registration' => now()->subDays(30),
             ],
             [
@@ -56,7 +56,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Nováková',
                 'address' => 'Slnečná 15, Trnava',
                 'role' => 'visitor',
-                'isActive' => true,
+                'is_active' => true,
                 'date_of_registration' => now()->subDays(10),
             ],
         ];

@@ -22,7 +22,7 @@ class AdminSeeder extends Seeder
             'last_name' => 'Administrátor',
             'address' => 'Vinárstvo 1, Bratislava',
             'role' => 'admin',
-            'isActive' => true,
+            'is_active' => true,
             'date_of_registration' => now(),
         ]);
 
