@@ -55,8 +55,8 @@
         document.addEventListener('DOMContentLoaded', function () {
             flatpickr("#date_time", {
                 enableTime: true,
-                dateFormat: "d.m.Y H:i",   // Backend expects this
-                maxDate: new Date(),        // No future dates
+                dateFormat: "Y-m-d H:i",  // use Laravel-friendly format
+                maxDate: new Date(),
                 defaultDate: "{{ old('date_time', now()->format('Y-m-d H:i')) }}"
             });
         });

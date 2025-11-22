@@ -47,7 +47,9 @@ class HarvestController extends Controller implements HasMiddleware
 
         // Generate next id_harvest
         $last = Harvest::orderBy('id_harvest', 'desc')->first();
-        //$validated['id_harvest'] = $last ? $last->id_harvest + 1 : 1;
+        $validated['id_harvest'] = $last ? $last->id_harvest + 1 : 1;
+        $validated['date_time'] = \Carbon\Carbon::parse($validated['date_time'])
+    ->format('Y-m-d H:i:s');
 
         $harvest = Harvest::create($validated);
 
@@ -67,7 +69,10 @@ class HarvestController extends Controller implements HasMiddleware
 
     public function edit(Harvest $harvest)
     {
-        return view('harvests.edit', compact('harvest'));
+        // docasne all
+        $wineyardrows = WineyardRow::all();
+
+        return view('harvests.edit', compact('harvest', 'wineyardrows'));
     }
 
     public function update(UpdateHarvestRequest $request, Harvest $harvest)
@@ -75,7 +80,7 @@ class HarvestController extends Controller implements HasMiddleware
         $validated = $request->validated();
         $harvest->update($validated);
         
-        return redirect()->route('harvests.show', $harvest)
+        return redirect()->route('harvests.index', $harvest)
             ->with('success', 'Harvest updated.');
     }
     public function destroy(Harvest $harvest)

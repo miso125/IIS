@@ -184,13 +184,13 @@
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('treatments.*') ? 'active' : '' }}" 
                                href="{{ route('treatments.index') }}">
-                                <i class="fas fa-spray-can"></i> Report Treatment
+                                <i class="fas fa-spray-can"></i> Treatments
                             </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('harvests.*') ? 'active' : '' }}" 
                                href="{{ route('harvests.index') }}">
-                                <i class="fas fa-apple-alt"></i> Report Harvest
+                                <i class="fas fa-apple-alt"></i> Harvest
                             </a>
                         </li>
                     @endrole
