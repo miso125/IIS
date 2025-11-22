@@ -18,7 +18,7 @@ class PurchaseSeeder extends Seeder
         $purchase1 = Purchase::create([
             'user' => 'zakaznik1',
             'date_time' => now()->subDays(3),
-            'sum' => 45.00,
+            'total_price' => 45.00,
         ]);
 
         // Položky prvého nákupu
@@ -34,7 +34,7 @@ class PurchaseSeeder extends Seeder
         $purchase2 = Purchase::create([
             'user' => 'zakaznik2',
             'date_time' => now()->subDays(1),
-            'sum' => 96.00,
+            'total_price' => 96.00,
         ]);
 
         // Položky druhého nákupu
