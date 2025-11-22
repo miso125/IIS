@@ -40,7 +40,7 @@ class StoreHarvestRequest extends FormRequest
             'date_time' => [
                 'required',
                 'date',
-                'before_or_equal:today',
+                'before_or_equal:now',
             ],
             'notes' => [
                 'nullable',

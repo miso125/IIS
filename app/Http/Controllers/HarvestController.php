@@ -47,7 +47,9 @@ class HarvestController extends Controller implements HasMiddleware
 
         // Generate next id_harvest
         $last = Harvest::orderBy('id_harvest', 'desc')->first();
-        //$validated['id_harvest'] = $last ? $last->id_harvest + 1 : 1;
+        $validated['id_harvest'] = $last ? $last->id_harvest + 1 : 1;
+        $validated['date_time'] = \Carbon\Carbon::parse($validated['date_time'])
+    ->format('Y-m-d H:i:s');
 
         $harvest = Harvest::create($validated);
 
