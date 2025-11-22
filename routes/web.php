@@ -43,6 +43,8 @@ Route::get('/treatments', function() {
     return view('treatments.show');
 });
 
+
+
 // ============================================
 // Autentifikácia (Login, Logout, Register)
 // ============================================
@@ -85,7 +87,7 @@ Route::middleware('auth')->group(function () {
     // ============================================
     Route::middleware('role:worker')->group(function () {
         Route::resource('harvests', HarvestController::class, ['only' => ['index', 'create', 'store']]);
-        Route::resource('treatments', TreatmentController::class, ['only' => ['index', 'create', 'store', 'show']]);
+        Route::resource('treatments', TreatmentController::class, ['only' => ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']]);
     });
 
     // ============================================

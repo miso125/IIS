@@ -21,6 +21,7 @@ class Treatment extends Model
         'treatment_product',
         'concentration',
         'notes',
+        'is_completed',
     ];
 
     public function winerow(): BelongsTo

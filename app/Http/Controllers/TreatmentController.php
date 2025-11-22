@@ -66,7 +66,7 @@ class TreatmentController extends Controller
 
         Treatment::create($validatedData);
 
-        return redirect()->route('dashboard')->with('success', 'Treatment created successfully.');
+        return redirect()->route('treatments.index')->with('success', 'Treatment created successfully.');
     }
 
 
@@ -82,10 +82,18 @@ class TreatmentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Treatment $treatment)
+    public function edit($id)
     {
-        return view('treatments.edit', compact('treatment'));
+        // Find the treatment by its ID, or fail with a 404 error if not found.
+        $treatment = Treatment::findOrFail($id);
+
+        // This will use the 'update' method in your TreatmentPolicy
+        $wineRows = WineyardRow::all();
+        $this->authorize('update', $treatment);
+
+        return view('treatments.edit', compact('treatment', 'wineRows'));
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -94,10 +102,10 @@ class TreatmentController extends Controller
     {
         $validatedData = $request->validate([
             'type' => 'required|string|max:255',
-            'wine_row' => 'required|exists:wineyardrow,id_row',
+            'wine_row' => 'exists:wineyardrow,id_row',
             'spray_used' => 'nullable|string|max:255',
             'concentration' => 'nullable|numeric|between:0,100',
-            'note' => 'nullable|string',
+            'notes' => 'nullable|string',
             'planned_date' => 'nullable|date_format:d.m.Y',
             'is_completed' => 'nullable|boolean',
         ]);
@@ -107,6 +115,13 @@ class TreatmentController extends Controller
             $validatedData['planned_date'] = \Carbon\Carbon::createFromFormat('d.m.Y', $validatedData['planned_date'])->format('Y-m-d');
         } else {
             $validatedData['planned_date'] = null;
+        }
+
+        // Handle checkbox for is_completed
+        if (!isset($validatedData['is_completed'])) {
+            $validatedData['is_completed'] = false;
+        } else {
+            $validatedData['is_completed'] = true;
         }
 
         $treatment->update($validatedData);
@@ -119,6 +134,8 @@ class TreatmentController extends Controller
      */
     public function destroy(Treatment $treatment)
     {
+        $this->authorize('delete', $treatment);
+
         $treatment->delete();
         return redirect()->route('treatments.index')->with('success', 'Treatment deleted.');
     }

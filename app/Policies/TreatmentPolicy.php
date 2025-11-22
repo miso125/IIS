@@ -30,19 +30,16 @@ class TreatmentPolicy
         return $user->hasPermissionTo('create treatment');
     }
 
-    /**
-     * Len ten, kto vykonál ošetrenie, môže editovať
-     */
+
     public function update(User $user, Treatment $treatment): bool
     {
-        return $user->hasPermissionTo('edit treatment') &&
-               $user->login === $treatment->user;
+        return $user->hasRole('worker') || $user->hasRole('vinar') || $user->hasRole('admin');
     }
+
 
     public function delete(User $user, Treatment $treatment): bool
     {
-        return $user->hasPermissionTo('delete treatment') &&
-               $user->login === $treatment->user;
+        return $user->hasRole('worker') || $user->hasRole('vinar') || $user->hasRole('admin');
     }
 
     public function restore(User $user, Treatment $treatment): bool
