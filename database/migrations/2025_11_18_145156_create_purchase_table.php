@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('user');
             $table->foreign('user')->references('login')->on('user')->onDelete('restrict');
             $table->dateTime('date_time');
-            $table->float('sum');
+            $table->float('total_price');
             $table->timestamps();
         });
     }

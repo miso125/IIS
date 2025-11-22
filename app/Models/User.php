@@ -24,12 +24,12 @@ class User extends Authenticable
         'last_name',
         'address',
         'role',
-        'isActive',
+        'is_active',
         'date_of_registration',
     ];
     protected $casts = [
         'date_of_registration' => 'datetime', // Converts string to Carbon object
-        'isActive' => 'boolean',              // Converts 0/1 to false/true
+        'is_active' => 'boolean',              // Converts 0/1 to false/true
     ];
     public function getAuthPasswordName()
     {
@@ -62,7 +62,7 @@ class User extends Authenticable
 
     public function scopeActive($query)
     {
-        return $query->where('isActive', true);
+        return $query->where('is_active', true);
     }
 
     public function scopeByRole($query, $role)

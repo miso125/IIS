@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('role');
             $table->dateTime('date_of_registration')->useCurrent();
-            $table->boolean('isActive')->default(true);
+            $table->boolean('is_active')->default(true);
         });
     }
 

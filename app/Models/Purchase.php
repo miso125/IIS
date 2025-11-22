@@ -16,7 +16,7 @@ class Purchase extends Model
     protected $fillable = [
         'user',
         'date_time',
-        'sum',
+        'total_price',
     ];
 
     public function user(): BelongsTo
@@ -38,7 +38,7 @@ class Purchase extends Model
 
     public function scopeAboveAmount($query, $amount)
     {
-        return $query->where('sum', '>=', $amount);
+        return $query->where('total_price', '>=', $amount);
     }
 
     public function scopeRecent($query, $days = 30)

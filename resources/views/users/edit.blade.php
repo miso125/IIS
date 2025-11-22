@@ -61,7 +61,7 @@
                         <div class="mb-3 form-check">
                             <input type="hidden" name="isActive" value="0">
                             <input type="checkbox" class="form-check-input" id="isActive" name="isActive" value="1" 
-                                   {{ $user->isActive ? 'checked' : '' }}>
+                                   {{ $user->is_active ? 'checked' : '' }}>
                             <label class="form-check-label" for="isActive">Active Account</label>
                         </div>
 

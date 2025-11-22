@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Harvest extends Model
 {
+    use HasFactory;
     protected $table = 'harvest';
     protected $primaryKey = 'id_harvest';
     protected $keyType = 'int';

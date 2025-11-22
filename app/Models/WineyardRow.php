@@ -15,7 +15,7 @@ class WineyardRow extends Model
     protected $fillable = [
         'user',
         'variety',
-        'number_of_gripes',
+        'number_of_vines',
         'planting_year',
         'colour',
     ];
@@ -35,7 +35,7 @@ class WineyardRow extends Model
         return $this->hasMany(Treatment::class, 'wine_row', 'id_row');
     }
 
-    public function scopeByBarva($query, $colour)
+    public function scopeByColour($query, $colour)
     {
         return $query->where('colour', $colour);
     }

@@ -23,7 +23,7 @@ class WineBatch extends Model
         'date_time',
     ];
 
-    public function harvest(): BelongsTo
+    public function harvestDetail(): BelongsTo
     {
         return $this->belongsTo(Harvest::class, 'harvest', 'id_harvest');
     }
