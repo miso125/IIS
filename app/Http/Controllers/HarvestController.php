@@ -69,7 +69,10 @@ class HarvestController extends Controller implements HasMiddleware
 
     public function edit(Harvest $harvest)
     {
-        return view('harvests.edit', compact('harvest'));
+        // docasne all
+        $wineyardrows = WineyardRow::all();
+
+        return view('harvests.edit', compact('harvest', 'wineyardrows'));
     }
 
     public function update(UpdateHarvestRequest $request, Harvest $harvest)
@@ -77,7 +80,7 @@ class HarvestController extends Controller implements HasMiddleware
         $validated = $request->validated();
         $harvest->update($validated);
         
-        return redirect()->route('harvests.show', $harvest)
+        return redirect()->route('harvests.index', $harvest)
             ->with('success', 'Harvest updated.');
     }
     public function destroy(Harvest $harvest)

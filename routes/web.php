@@ -91,7 +91,7 @@ Route::middleware('auth')->group(function () {
     // Worker Routes
     // ============================================
     Route::middleware('role:worker')->group(function () {
-        Route::resource('harvests', HarvestController::class, ['only' => ['index', 'create', 'store']]);
+        Route::resource('harvests', HarvestController::class, ['only' => ['index', 'create', 'store', 'edit', 'update', 'destroy']]);
         Route::resource('treatments', TreatmentController::class, ['only' => ['index', 'create', 'store', 'show', 'edit', 'update', 'destroy']]);
     });
 
@@ -103,6 +103,16 @@ Route::middleware('auth')->group(function () {
         Route::get('/wine_batches/{wine_batch}', [WineBatchController::class, 'show'])->name('wine_batches.show');
         Route::resource('purchases', PurchaseController::class, ['only' => ['index', 'create', 'store']]);
         Route::get('/my-purchases', [PurchaseController::class, 'myPurchases'])->name('my-purchases');
+    });
+});
+
+Route::middleware('auth')->group(function () {
+    Route::middleware('role:vinar|worker|admin')->group(function () {
+        Route::resource('harvests', HarvestController::class);
+    });
+
+    Route::middleware('role:vinar|worker|admin')->group(function () {
+        Route::resource('treatments', TreatmentController::class);
     });
 });
 

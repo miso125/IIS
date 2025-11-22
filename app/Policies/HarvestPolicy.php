@@ -42,15 +42,35 @@ class HarvestPolicy
      */
     public function update(User $user, Harvest $harvest): bool
     {
-        return $user->hasPermissionTo('edit harvest') &&
-               $user->login === $harvest->winerow->user;
+        // worker who created harvest
+        if ($user->hasRole('worker') && $user->login === $harvest->user) {
+            return true;
+        }
+
+        // winemaker
+        if ($harvest->winerow && $user->login === $harvest->winerow->user &&
+            $user->hasPermissionTo('edit harvest')) {
+            return true;
+        }
+
+        return false;
     }
+
+
 
     public function delete(User $user, Harvest $harvest): bool
     {
-        return $user->hasPermissionTo('delete harvest') &&
-               $user->login === $harvest->winerow->user;
+        if ($user->hasRole('worker') && $user->login === $harvest->user) {
+            return true;
+        }
+
+        if ($harvest->winerow && $user->login === $harvest->winerow->user) {
+            return true;
+        }
+
+        return false;
     }
+
 
     public function restore(User $user, Harvest $harvest): bool
     {
