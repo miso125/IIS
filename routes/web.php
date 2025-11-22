@@ -38,16 +38,31 @@ Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('adm
 Route::get('/user', function () {
     return view('users');
 });
-
+/* 
 Route::get('/treatments', function() {
     return view('treatments.show');
 });
 
+ */
+/* 
+Route::middleware('auth')->group(function () {
 
+    // Treatments: vinar can view index/show, worker can do all
+    Route::get('/treatments', [TreatmentController::class, 'index'])->middleware('role:winemaker|worker')->name('treatments.index');
+    Route::get('/treatments/{treatment}', [TreatmentController::class, 'show'])->middleware('role:winemaker|worker')->name('treatments.show');
 
-Route::resource('harvests', HarvestController::class);
+    // Worker-only routes
+    Route::middleware('role:worker')->group(function () {
+        Route::get('/treatments/create', [TreatmentController::class, 'create'])->name('treatments.create');
+        Route::post('/treatments', [TreatmentController::class, 'store'])->name('treatments.store');
+        Route::get('/treatments/{treatment}/edit', [TreatmentController::class, 'edit'])->name('treatments.edit');
+        Route::put('/treatments/{treatment}', [TreatmentController::class, 'update'])->name('treatments.update');
+        Route::delete('/treatments/{treatment}', [TreatmentController::class, 'destroy'])->name('treatments.destroy');
+    });
 
+});
 
+ */
 
 
 // ============================================
@@ -80,7 +95,7 @@ Route::middleware('auth')->group(function () {
     // ============================================
     // Vinar Routes
     // ============================================
-    Route::middleware('role:vinar')->group(function () {
+    Route::middleware('role:winemaker')->group(function () {
         Route::resource('vineyards', WineyardRowController::class);
         Route::resource('harvests', HarvestController::class);
         Route::resource('treatments', TreatmentController::class);
@@ -107,11 +122,11 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::middleware('role:vinar|worker|admin')->group(function () {
+    Route::middleware('role:winemaker|worker|admin')->group(function () {
         Route::resource('harvests', HarvestController::class);
     });
 
-    Route::middleware('role:vinar|worker|admin')->group(function () {
+    Route::middleware('role:winemaker|worker|admin')->group(function () {
         Route::resource('treatments', TreatmentController::class);
     });
 });

@@ -16,7 +16,8 @@ class TreatmentController extends Controller
     {
         return [
             'auth',
-            'role:vinar|worker' => ['except' => ['show', 'index']],
+            // Only restrict creation/updating/deleting to roles, index/show open to vinar
+            'role:worker' => ['only' => ['create','store','edit','update','destroy']],
         ];
     }
 
@@ -25,9 +26,12 @@ class TreatmentController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Treatment::class);
+
         $treatments = Treatment::with('user')
             ->orderBy('date_time', 'desc')
             ->paginate(15);
+
         return view('treatments.index', compact('treatments'));
     }
 

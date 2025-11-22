@@ -15,15 +15,18 @@ class TreatmentPolicy
         return null;
     }
 
-    public function viewAny(User $user): bool
+    public function viewAny(User $user)
     {
-        return $user->hasPermissionTo('view treatment');
+        // Use hasRole() instead of accessing $user->role directly
+        return $user->hasRole('worker') || $user->hasRole('winemaker');
     }
 
-    public function view(User $user, Treatment $treatment): bool
+    public function view(User $user, Treatment $treatment)
     {
-        return $user->hasPermissionTo('view treatment');
+        return $user->hasRole('worker') || $user->hasRole('winemaker');
     }
+
+
 
     public function create(User $user): bool
     {
@@ -33,13 +36,13 @@ class TreatmentPolicy
 
     public function update(User $user, Treatment $treatment): bool
     {
-        return $user->hasRole('worker') || $user->hasRole('vinar') || $user->hasRole('admin');
+        return $user->hasRole('worker') || $user->hasRole('winemaker') || $user->hasRole('admin');
     }
 
 
     public function delete(User $user, Treatment $treatment): bool
     {
-        return $user->hasRole('worker') || $user->hasRole('vinar') || $user->hasRole('admin');
+        return $user->hasRole('worker') || $user->hasRole('winemaker') || $user->hasRole('admin');
     }
 
     public function restore(User $user, Treatment $treatment): bool
