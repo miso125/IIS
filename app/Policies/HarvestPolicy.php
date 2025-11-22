@@ -22,7 +22,8 @@ class HarvestPolicy
 
     public function view(User $user, Harvest $harvest): bool
     {
-        return $user->hasPermissionTo('view harvest');
+        return $user->hasPermissionTo('view harvest') ||
+               $user->login === $harvest->user;
     }
 
     /**
@@ -30,8 +31,11 @@ class HarvestPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasPermissionTo('create harvest');
+        return $user->hasRole('worker') || $user->hasPermissionTo('create harvest');
     }
+
+
+
 
     /**
      * Len vinár-vlastník môže editovať
@@ -39,13 +43,13 @@ class HarvestPolicy
     public function update(User $user, Harvest $harvest): bool
     {
         return $user->hasPermissionTo('edit harvest') &&
-               $user->login === $harvest->wine_row->user;
+               $user->login === $harvest->winerow->user;
     }
 
     public function delete(User $user, Harvest $harvest): bool
     {
         return $user->hasPermissionTo('delete harvest') &&
-               $user->login === $harvest->wine_row->user;
+               $user->login === $harvest->winerow->user;
     }
 
     public function restore(User $user, Harvest $harvest): bool

@@ -30,8 +30,8 @@
 
             <div id="chemical_fields" style="{{ old('type', $treatment->type) == 'Chemical Spraying' ? 'display: block;' : 'display: none;' }}">
                 <div class="form-group">
-                    <label for="spray_used">Spray Used:</label>
-                    <input type="text" class="form-control" id="spray_used" name="spray_used" value="{{ old('spray_used', $treatment->spray_used) }}">
+                    <label for="treatment_product">Spray Used:</label>
+                    <input type="text" class="form-control" id="treatment_product" name="treatment_product" value="{{ old('treatment_product', $treatment->treatment_product) }}">
                 </div>
                 
                 <div class="form-group">

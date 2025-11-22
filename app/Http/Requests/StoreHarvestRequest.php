@@ -6,26 +6,19 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class StoreHarvestRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
+
     public function authorize(): bool
     {
-        return auth()->check() && auth()->user()->hasPermissionTo('create harvest');
+        return $this->user()->can('create', \App\Models\Harvest::class);
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
-     */
+
     public function rules(): array
     {
         return [
-            'id_harvest' => [
+            'wine_row' => [
                 'required',
-                'integer',
-                'exists:vineyards,id',
+                'exists:wineyardrow,id_row',
             ],
             'weight_grapes' => [
                 'required',
@@ -49,15 +42,19 @@ class StoreHarvestRequest extends FormRequest
                 'date',
                 'before_or_equal:today',
             ],
+            'notes' => [
+                'nullable',
+                'string',
+            ],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'vineyard_id.exists' => 'Selected vineyard does not exist',
-            'grape_weight.numeric' => 'Grape weight must be a valid number',
-            'sugar_content.numeric' => 'Sugar content must be a valid number',
+            'wine_row.exists' => 'Selected vineyard row does not exist',
+            'weight_grapes.numeric' => 'Grape weight must be a valid number',
+            'sugariness.numeric' => 'Sugar content must be a valid number',
             'date_time.before_or_equal' => 'Harvest date cannot be in the future',
         ];
     }

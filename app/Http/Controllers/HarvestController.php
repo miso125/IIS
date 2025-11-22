@@ -15,17 +15,15 @@ class HarvestController extends Controller implements HasMiddleware
     {
         return [
             'auth',
-            new Middleware('permission:view harvest', only: ['index', 'show']),
-            new Middleware('permission:create harvest', only: ['create', 'store']),
-            new Middleware('permission:edit harvest', only: ['edit', 'update']),
-            new Middleware('permission:delete harvest', only: ['destroy']),
+            new Middleware('can:viewAny,App\Models\Harvest', only: ['index']),
+            new Middleware('can:create,App\Models\Harvest', only: ['create', 'store']),
+            new Middleware('can:update,harvest', only: ['edit', 'update']),
+            new Middleware('can:delete,harvest', only: ['destroy']),
         ];
     }
 
     public function index()
     {
-        $this->authorize('viewAny', Harvest::class);
-        
         $harvests = Harvest::with(['wineyardrow', 'user'])
             ->orderBy('date_time', 'desc')
             ->paginate(15);
@@ -35,32 +33,33 @@ class HarvestController extends Controller implements HasMiddleware
 
     public function create()
     {
-        $this->authorize('create', Harvest::class);
-        
         // Len vinoradky prihláseneho užívateľa
-        $wineyardrows = WineyardRow::where('user', auth()->id())
-            ->get();
+        // docasne all
+        $wineyardrows = WineyardRow::all();
         
         return view('harvests.create', compact('wineyardrows'));
     }
 
     public function store(StoreHarvestRequest $request)
     {
-        $this->authorize('create', Harvest::class);
-        
         $validated = $request->validated();
         $validated['user'] = auth()->id();
-        
+
+        // Generate next id_harvest
+        $last = Harvest::orderBy('id_harvest', 'desc')->first();
+        //$validated['id_harvest'] = $last ? $last->id_harvest + 1 : 1;
+
         $harvest = Harvest::create($validated);
-        
-        return redirect()->route('harvests.show', $harvest)
+
+        return redirect()->route('harvests.index', $harvest)
             ->with('success', 'Harvest registered.');
     }
 
+
+
+
     public function show(Harvest $harvest)
     {
-        $this->authorize('view', $harvest);
-        
         $batches = $harvest->batches()->paginate(10);
         
         return view('harvests.show', compact('harvest', 'batches'));
@@ -68,26 +67,19 @@ class HarvestController extends Controller implements HasMiddleware
 
     public function edit(Harvest $harvest)
     {
-        $this->authorize('update', $harvest);
-        
         return view('harvests.edit', compact('harvest'));
     }
 
     public function update(UpdateHarvestRequest $request, Harvest $harvest)
     {
-        $this->authorize('update', $harvest);
-        
         $validated = $request->validated();
         $harvest->update($validated);
         
         return redirect()->route('harvests.show', $harvest)
             ->with('success', 'Harvest updated.');
     }
-
     public function destroy(Harvest $harvest)
     {
-        $this->authorize('delete', $harvest);
-        
         $harvest->delete();
         
         return redirect()->route('harvests.index')

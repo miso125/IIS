@@ -25,7 +25,7 @@ class WineyardRowPolicy
 
     public function view(User $user, WineyardRow $winerow): bool
     {
-        return $user->hasPermissionTo('view winerow');
+        return $user->hasRole('worker') || $user->hasPermissionTo('view winerow');
     }
 
     /**

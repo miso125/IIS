@@ -36,8 +36,8 @@
 
             <div id="chemical_fields" style="display: none;">
                 <div class="form-group">
-                    <label for="spray_used">Spray Used:</label>
-                    <input type="text" class="form-control" id="spray_used" name="spray_used">
+                    <label for="treatment_product">Spray Used:</label>
+                    <input type="text" class="form-control" id="treatment_product" name="treatment_product">
                 </div>
                 
                 <div class="form-group">
@@ -53,8 +53,8 @@
             </div>
 
             <div class="form-group">
-                <label for="note">Note:</label>
-                <textarea class="form-control" id="note" name="note" rows="3"></textarea>
+                <label for="notes">Note:</label>
+                <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
             </div>
 
             <div class="form-group">

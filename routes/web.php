@@ -45,6 +45,11 @@ Route::get('/treatments', function() {
 
 
 
+Route::resource('harvests', HarvestController::class);
+
+
+
+
 // ============================================
 // Autentifikácia (Login, Logout, Register)
 // ============================================

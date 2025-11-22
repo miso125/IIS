@@ -22,9 +22,10 @@ class Harvest extends Model
         'variety',
         'sugariness',
         'date_time',
+        'notes',
     ];
 
-    public function winerow(): BelongsTo
+    public function wineyardrow(): BelongsTo
     {
         return $this->belongsTo(WineyardRow::class, 'wine_row', 'id_row');
     }

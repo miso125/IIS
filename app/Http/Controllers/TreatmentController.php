@@ -25,7 +25,9 @@ class TreatmentController extends Controller
      */
     public function index()
     {
-        $treatments = Treatment::all();
+        $treatments = Treatment::with('user')
+            ->orderBy('date_time', 'desc')
+            ->paginate(15);
         return view('treatments.index', compact('treatments'));
     }
 
@@ -46,9 +48,9 @@ class TreatmentController extends Controller
         $validatedData = $request->validate([
             'type' => 'required|string|max:255',
             'wine_row' => 'required|exists:wineyardrow,id_row',
-            'spray_used' => 'nullable|string|max:255',
+            'treatment_product' => 'nullable|string|max:255',
             'concentration' => 'nullable|numeric|between:0,100',
-            'note' => 'nullable|string',
+            'notes' => 'nullable|string',
             'planned_date' => 'nullable|date_format:d.m.Y',
             'is_completed' => 'nullable|boolean',
         ]);
@@ -56,6 +58,13 @@ class TreatmentController extends Controller
         // Convert date format for database storage
         if (isset($validatedData['planned_date'])) {
             $validatedData['planned_date'] = \Carbon\Carbon::createFromFormat('d.m.Y', $validatedData['planned_date'])->format('Y-m-d');
+        }
+
+        // Handle checkbox for is_completed
+        if (!isset($validatedData['is_completed'])) {
+            $validatedData['is_completed'] = false;
+        } else {
+            $validatedData['is_completed'] = true;
         }
 
         // Assign current user
@@ -103,7 +112,7 @@ class TreatmentController extends Controller
         $validatedData = $request->validate([
             'type' => 'required|string|max:255',
             'wine_row' => 'exists:wineyardrow,id_row',
-            'spray_used' => 'nullable|string|max:255',
+            'treatment_product' => 'nullable|string|max:255',
             'concentration' => 'nullable|numeric|between:0,100',
             'notes' => 'nullable|string',
             'planned_date' => 'nullable|date_format:d.m.Y',
