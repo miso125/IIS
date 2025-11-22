@@ -54,7 +54,7 @@ class DashboardController extends Controller
             'myVineyards' => $user->wineyardrows()->count(),
             'myVineyardsList' => $user->wineyardrows()->paginate(5),
             'totalHarvests' => $user->harvests()->count(),
-            'totalBatches' => WineBatch::whereHas('harvest.wineyardrow', function($q) use ($user) {
+            'totalBatches' => WineBatch::whereHas('harvestDetail.wineyardrow', function($q) use ($user) {
                 $q->where('user', $user->login);
             })->count(),
             'totalTreatments' => $user->treatments()->count(),
