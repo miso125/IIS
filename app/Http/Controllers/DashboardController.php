@@ -54,7 +54,7 @@ class DashboardController extends Controller
             'myVineyards' => $user->wineyardrows()->count(),
             'myVineyardsList' => $user->wineyardrows()->paginate(5),
             'totalHarvests' => $user->harvests()->count(),
-            'totalBatches' => WineBatch::whereHas('harvest.winerow', function($q) use ($user) {
+            'totalBatches' => WineBatch::whereHas('harvest.wineyardrow', function($q) use ($user) {
                 $q->where('user', $user->login);
             })->count(),
             'totalTreatments' => $user->treatments()->count(),
@@ -87,7 +87,7 @@ class DashboardController extends Controller
 
         return view('dashboard', [
             'myPurchases' => $user->purchases()->count(),
-            'totalSpent' => $user->purchases()->total_price('total_price'),
+            'totalSpent' => $user->purchases()->sum('total_price'),
             'availableWines' => WineBatch::where('number_of_bottles', '>', 0)->count(),
         ]);
     }

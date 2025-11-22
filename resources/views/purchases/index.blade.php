@@ -1,54 +1,58 @@
 @extends('layouts.app')
 
-@section('title', 'My Purchases')
+@section('title', 'Moja História')
 
 @section('content')
 <div class="container py-4">
-    <h2 class="mb-4"><i class="fas fa-history"></i> Purchase History</h2>
+    <h2 class="mb-4"><i class="fas fa-history"></i> Moje Nákupy</h2>
 
-    <div class="card shadow">
-        <div class="card-body">
-            @if($purchases->isEmpty())
-                <p class="text-center text-muted my-4">You haven't purchased any wine yet.</p>
-                <div class="text-center">
-                    <a href="{{ route('wine_batches.index') }}" class="btn btn-primary">Go to Shop</a>
-                </div>
-            @else
-                <table class="table table-hover align-middle">
+    @if($purchases->isEmpty())
+        <div class="alert alert-warning">
+            Ešte nemáte žiadne nákupy. <a href="{{ route('wine_batches.index') }}">Prejsť do obchodu</a>
+        </div>
+    @else
+        <div class="card shadow border-0">
+            <div class="card-body p-0">
+                <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>Date</th>
-                            <th>Wine Details</th> <th class="text-center">Quantity</th>
-                            <th class="text-end">Total Price</th>
+                            <th class="ps-4">Dátum</th>
+                            <th>Víno</th>
+                            <th class="text-center">Množstvo</th>
+                            <th class="text-end pe-4">Cena celkom</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($purchases as $purchase)
+                            {{-- Tu je to použitie ITEMS: prechádzame všetky položky jedného nákupu --}}
                             @foreach($purchase->items as $item)
                                 <tr>
-                                    <td>{{ $purchase->date_time->format('d.m.Y H:i') }}</td>
+                                    <td class="ps-4">{{ $purchase->date_time->format('d.m.Y H:i:s') }}</td>
                                     <td>
-                                        <strong>
-                                            {{ $item->wineBatch->harvest->vineyard->variety ?? 'Unknown Wine' }}
-                                        </strong>
+                                        <span class="fw-bold text-primary">
+                                            {{ $item->batch->harvestDetail->winerow->variety ?? 'Víno' }}
+                                        </span>
                                         <br>
                                         <small class="text-muted">
-                                            Vintage {{ $item->wineBatch->harvestDetail->year ?? '-' }}
+                                            Ročník {{ $item->batch->harvestDetail->year ?? '-' }}
                                         </small>
                                     </td>
-                                    <td class="text-center">{{ $item->quantity }} pcs</td>
-                                    <td class="text-end fw-bold">{{ number_format($purchase->sum, 2) }} €</td>
+                                    <td class="text-center">
+                                        {{ $item->number_of_bottles }} ks
+                                    </td>
+                                    <td class="text-end pe-4 fw-bold">
+                                        {{ number_format($purchase->total_price, 2) }} €
+                                    </td>
                                 </tr>
                             @endforeach
                         @endforeach
                     </tbody>
                 </table>
-                
-                <div class="mt-3">
-                    {{ $purchases->links() }}
-                </div>
-            @endif
+            </div>
+            <div class="p-3">
+                {{ $purchases->links() }}
+            </div>
         </div>
-    </div>
+    @endif
 </div>
 @endsection

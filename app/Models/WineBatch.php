@@ -20,6 +20,7 @@ class WineBatch extends Model
         'sugariness',
         'alcohol_percentage',
         'number_of_bottles',
+        'price',
         'date_time',
     ];
 

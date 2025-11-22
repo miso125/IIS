@@ -15,14 +15,11 @@ class PurchaseController extends Controller
      */
     public function index()
     {
-        if (auth()->user()->hasRole('admin')) {
-            $purchases = Purchase::with(['items.wineBatch.harvest.vineyard', 'buyer'])->latest('date_time')->paginate(10);
-        } else {
-            $purchases = Purchase::with(['items.wineBatch.harvest.vineyard'])
-                        ->where('user', auth()->user()->login) // Používame login, nie ID
-                        ->latest('date_time')
-                        ->paginate(10);
-        }
+        $purchases = Purchase::with(['items.batch.harvestDetail.wineyardrow'])
+            ->where('user', auth()->user()->login)
+            ->latest('date_time')
+            ->paginate(10);
+
 
         return view('purchases.index', compact('purchases'));
     }
@@ -41,46 +38,44 @@ class PurchaseController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'wine_batch_id' => 'required|exists:winebatch,id_batch',
+            'wine_batch_id' => 'required|exists:winebatch,batch_number',
             'quantity' => 'required|integer|min:1',
         ]);
 
-        // 1. Nájdeme víno
-        $wineBatch = WineBatch::findOrFail($request->wine_batch_id);
+        $batch = WineBatch::findOrFail($request->wine_batch_id);
 
-        // 2. Skontrolujeme dostupnosť
-        if ($wineBatch->quantity < $request->quantity) {
-            return back()->with('error', 'Not enough bottles in stock!');
+        if ($batch->number_of_bottles < $request->quantity) {
+            return back()->with('error', 'Nedostatok tovaru na sklade.');
         }
 
         try {
-            DB::transaction(function () use ($request, $wineBatch) {
-                // 3. Vypočítame sumu
-                $totalPrice = $wineBatch->price * $request->quantity;
+            DB::transaction(function () use ($request, $batch) {
+                $pricePerUnit = $batch->price;
+                $totalPrice = $pricePerUnit * $request->quantity;
 
-                // 4. Vytvoríme Nákup (Hlavička)
+                // 1. Vytvoríme hlavičku nákupu
                 $purchase = Purchase::create([
-                    'user' => auth()->user()->login, // Primárny kľúč je login
+                    'user' => auth()->user()->login,
                     'date_time' => now(),
-                    'total_price' => $totalPrice,
+                    'total_price' => $totalPrice, // Opravený názov stĺpca
                 ]);
 
-                // 5. Vytvoríme Položku nákupu
+                // 2. Vytvoríme položku
                 PurchaseItem::create([
                     'purchase' => $purchase->id_purchase,
-                    'wine_batch' => $wineBatch->id_batch,
-                    'quantity' => $request->quantity,
-                    'price_per_unit' => $wineBatch->price,
+                    'wine_batch' => $batch->batch_number,
+                    'number_of_bottles' => $request->quantity, // Váš názov stĺpca v purchaseitem
+                    'item_price' => $pricePerUnit,
+                    'stock' => true // Predpokladám, že toto znamená "vydané zo skladu"
                 ]);
 
-                // 6. Odpočítame zo skladu
-                $wineBatch->decrement('quantity', $request->quantity);
+                // 3. Odpočítame zo skladu
+                $batch->decrement('number_of_bottles', $request->quantity);
             });
 
-            return redirect()->route('purchases.index')->with('success', 'Wine purchased successfully! Cheers!');
-
+            return redirect()->route('purchases.index')->with('success', 'Víno bolo úspešne zakúpené!');
         } catch (\Exception $e) {
-            return back()->with('error', 'Something went wrong during purchase.');
+            return back()->with('error', 'Chyba nákupu: ' . $e->getMessage());
         }
     }
 

@@ -19,6 +19,9 @@ class Purchase extends Model
         'total_price',
     ];
 
+    protected $casts = [
+        'date_time' => 'datetime',
+    ];
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user', 'login');

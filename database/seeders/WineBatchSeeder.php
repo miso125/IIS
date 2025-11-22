@@ -21,6 +21,7 @@ class WineBatchSeeder extends Seeder
                 'sugariness' => 18,
                 'alcohol_percentage' => 12.5,
                 'number_of_bottles' => 450,
+                'price' => 10,
                 'date_time' => now()->subDays(10),
             ],
             [
@@ -30,6 +31,7 @@ class WineBatchSeeder extends Seeder
                 'sugariness' => 20,
                 'alcohol_percentage' => 13.0,
                 'number_of_bottles' => 300,
+                'price' => 18,
                 'date_time' => now()->subDays(8),
             ],
             [
@@ -39,6 +41,7 @@ class WineBatchSeeder extends Seeder
                 'sugariness' => 19,
                 'alcohol_percentage' => 12.8,
                 'number_of_bottles' => 520,
+                'price' => 25,
                 'date_time' => now()->subDays(5),
             ],
         ];

@@ -14,14 +14,12 @@ class WineBatchController extends Controller
     {
         $this->authorize('viewAny', WineBatch::class); // Policy kontrola
 
-        // Ak je to zákazník, vidí len vína, ktorých je viac ako 0 na sklade
+        // Načítame vína aj s informáciami o úrode a vinohrade (cez opravený názov harvestDetail)
+        $wineBatches = \App\Models\WineBatch::with(['harvestDetail.wineyardrow'])->get();
+
+        // Ak je to zákazník, vyfiltrujeme len tie, čo sú na sklade (number_of_bottles > 0)
         if (auth()->user()->hasRole('customer')) {
-            $wineBatches = WineBatch::with(['harvestDetail', 'harvestDetail.winerow'])
-                            ->where('quantity', '>', 0)
-                            ->get();
-        } else {
-            // Admin a vinár vidia všetko
-            $wineBatches = WineBatch::with(['harvestDetail', 'harvestDetail.winerow'])->get();
+            $wineBatches = $wineBatches->where('number_of_bottles', '>', 0);
         }
 
         return view('wine_batches.index', compact('wineBatches'));

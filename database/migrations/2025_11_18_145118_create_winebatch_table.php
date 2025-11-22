@@ -19,6 +19,7 @@ return new class extends Migration
             $table->integer('sugariness');
             $table->float('alcohol_percentage');
             $table->integer('number_of_bottles');
+            $table->decimal('price', 10, 2)->default(0.00);
             $table->dateTime('date_time');
             $table->timestamps();
         });
