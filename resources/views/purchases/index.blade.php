@@ -4,11 +4,11 @@
 
 @section('content')
 <div class="container py-4">
-    <h2 class="mb-4"><i class="fas fa-history"></i> Moje Nákupy</h2>
+    <h2 class="mb-4"><i class="fas fa-history"></i> My Purchases</h2>
 
     @if($purchases->isEmpty())
         <div class="alert alert-warning">
-            Ešte nemáte žiadne nákupy. <a href="{{ route('wine_batches.index') }}">Prejsť do obchodu</a>
+            You don't have any purchases yet. <a href="{{ route('wine_batches.index') }}">Go to store</a>
         </div>
     @else
         <div class="card shadow border-0">
@@ -16,10 +16,10 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-4">Dátum</th>
-                            <th>Víno</th>
-                            <th class="text-center">Množstvo</th>
-                            <th class="text-end pe-4">Cena celkom</th>
+                            <th class="ps-4">Date</th>
+                            <th>Wine</th>
+                            <th class="text-center">Quantity</th>
+                            <th class="text-end pe-4">Total price</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -34,7 +34,7 @@
                                         </span>
                                         <br>
                                         <small class="text-muted">
-                                            Ročník {{ $item->batch->vintage ?? '-' }}
+                                            Vintage {{ $item->batch->vintage ?? '-' }}
                                         </small>
                                     </td>
                                     <td class="text-center">
