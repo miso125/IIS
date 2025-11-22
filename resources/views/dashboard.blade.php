@@ -195,12 +195,12 @@
                             <tbody>
                                 @forelse($myVineyardsList ?? [] as $vineyard)
                                     <tr>
-                                        <td><strong>{{ $vineyard->odroda }}</strong></td>
-                                        <td>{{ $vineyard->pocet_hlav }}</td>
-                                        <td>{{ $vineyard->rok_vysadby }}</td>
+                                        <td><strong>{{ $vineyard->variety }}</strong></td>
+                                        <td>{{ $vineyard->number_of_vines }}</td>
+                                        <td>{{ $vineyard->planting_year }}</td>
                                         <td>
-                                            <span class="badge" style="background-color: {{ $vineyard->barva == 'white' ? '#fff3cd' : '#8B0000' }}; color: #000;">
-                                                {{ ucfirst($vineyard->barva) }}
+                                            <span class="badge" style="background-color: {{ $vineyard->colour == 'white' ? '#fff3cd' : '#8B0000' }}; color: #000;">
+                                                {{ ucfirst($vineyard->colour) }}
                                             </span>
                                         </td>
                                         <td>
