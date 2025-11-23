@@ -22,7 +22,11 @@ class Harvest extends Model
         'variety',
         'sugariness',
         'date_time',
+        'status',
         'notes',
+    ];
+    protected $casts = [
+        'date_time' => 'datetime', // Converts string to Carbon object
     ];
 
     public function wineyardrow(): BelongsTo

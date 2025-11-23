@@ -54,6 +54,8 @@ class DashboardController extends Controller
             'myVineyards' => $user->wineyardrows()->count(),
             'myVineyardsList' => $user->wineyardrows()->paginate(5),
             'totalHarvests' => $user->harvests()->count(),
+            'plannedHarvests' => Harvest::where('status', 'planned')->get(),
+            'readyToBottle' => Harvest::where('status', 'completed')->with('wineyardrow')->get(),
             'totalBatches' => WineBatch::whereHas('harvestDetail.wineyardrow', function($q) use ($user) {
                 $q->where('user', $user->login);
             })->count(),
@@ -75,6 +77,10 @@ class DashboardController extends Controller
                 ->latest('date_time')
                 ->limit(5)
                 ->get(),
+            'plannedHarvests' => Harvest::where('status', 'planned')
+                                ->with('wineyardrow')
+                                ->orderBy('date_time', 'asc')
+                                ->get(),
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Harvest;
 use App\Models\WineBatch;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,7 @@ class WineBatchController extends Controller
         $this->authorize('viewAny', WineBatch::class); // Policy kontrola
 
         // Načítame vína aj s informáciami o úrode a vinohrade (cez opravený názov harvestDetail)
-        $wineBatches = \App\Models\WineBatch::with(['harvestDetail.wineyardrow'])->get();
+        $wineBatches = WineBatch::with(['harvestDetail.wineyardrow'])->get();
 
         // Ak je to zákazník, vyfiltrujeme len tie, čo sú na sklade (number_of_bottles > 0)
         if (auth()->user()->hasRole('customer')) {
@@ -31,6 +32,34 @@ class WineBatchController extends Controller
     public function create()
     {
         //
+    }
+
+    public function createFromHarvest(Request $request, Harvest $harvest)
+    {
+        // Kontrola: Len dokončenú sklizeň možno fľašovať
+        if ($harvest->status !== 'completed') {
+            return back()->with('error', 'Only completed harvests can be bottled.');
+        }
+
+        // Automatický výpočet (napr. 1kg hrozna = 0.7 fľaše)
+        $estimatedBottles = floor($harvest->weight_grapes * 0.7);
+
+        // Vytvorenie Šarže
+        WineBatch::create([
+            'harvest' => $harvest->id_harvest,
+            'vintage' => $harvest->date_time->format('Y'), // Ročník podľa dátumu sklizne
+            'variety' => $harvest->variety, // Odroda zo sklizne
+            'sugariness' => $harvest->sugariness,
+            'alcohol_percentage' => 12.5, // Predvolené alebo doplňte input
+            'number_of_bottles' => $estimatedBottles,
+            'date_time' => now(),
+            'price' => 10.00, // Predvolená cena
+        ]);
+
+        // Označíme sklizeň ako 'bottled', aby sme ju nefľašovali dvakrát
+        $harvest->update(['status' => 'bottled']);
+
+        return back()->with('success', 'Wine Batch created successfully! Ready for sale.');
     }
 
     /**
@@ -52,24 +81,44 @@ class WineBatchController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(WineBatch $wine_batch)
     {
         //
+        $this->authorize('update', $wine_batch);
+
+        return view('wine_batches.edit', ['batch' => $wine_batch]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, WineBatch $wine_batch)
     {
-        //
+        $this->authorize('update', $wine_batch);
+
+        $validated = $request->validate([
+            'price' => 'required|numeric|min:0',
+            'number_of_bottles' => 'required|integer|min:0',
+            'sugariness' => 'required|integer|min:0',
+            'alcohol_percentage' => 'required|numeric|min:0|max:20',
+        ]);
+
+        $wine_batch->update($validated);
+
+        return redirect()->route('wine_batches.index')
+            ->with('success', 'Wine batch updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(WineBatch $wine_batch)
     {
-        //
+        $this->authorize('delete', $wine_batch);
+
+        $wine_batch->delete();
+
+        return redirect()->route('wine_batches.index')
+            ->with('success', 'Wine batch deleted.');
     }
 }

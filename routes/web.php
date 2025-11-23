@@ -12,38 +12,11 @@ use App\Models\WineBatch;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 
-// functional user show
-/* Route::get('/', function () {
-    $users = User::take(5)->get();
-    return view('home', compact('users'));
-}); */
-
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::get('/guest', function () {
-    $wine = WineBatch::take(5)->get();
-    return view('layouts/guest', compact('wine'));
-});
-Route::get('/welcome', function () {
-    return view('welcome');
-});
-Route::get('/dashboard', function () {
-    return view('dashboard');
-});
-Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
-
-Route::get('/user', function () {
-    return view('users');
-});
-/* 
-Route::get('/treatments', function() {
-    return view('treatments.show');
-});
-
- */
 /* 
 Route::middleware('auth')->group(function () {
 
@@ -85,6 +58,10 @@ Route::middleware('auth')->group(function () {
     // Logout
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+    Route::middleware('role:customer|winemaker|admin')->group(function () {
+        Route::get('/wine_batches', [WineBatchController::class, 'index'])->name('wine_batches.index');
+        Route::get('/wine_batches/{wine_batch}', [WineBatchController::class, 'show'])->name('wine_batches.show');
+    });
     // ============================================
     // Admin Routes
     // ============================================
@@ -100,6 +77,8 @@ Route::middleware('auth')->group(function () {
         Route::resource('harvests', HarvestController::class);
         Route::resource('treatments', TreatmentController::class);
         Route::resource('wine_batches', WineBatchController::class);
+        Route::post('/harvests/{harvest}/bottle', [WineBatchController::class, 'createFromHarvest'])
+             ->name('harvests.bottle');
     });
 
     // ============================================
@@ -114,8 +93,6 @@ Route::middleware('auth')->group(function () {
     // Customer Routes
     // ============================================
     Route::middleware('role:customer')->group(function () {
-        Route::get('/wine_batches', [WineBatchController::class, 'index'])->name('wine_batches.index');
-        Route::get('/wine_batches/{wine_batch}', [WineBatchController::class, 'show'])->name('wine_batches.show');
         Route::resource('purchases', PurchaseController::class, ['only' => ['index', 'create', 'store']]);
         Route::get('/my-purchases', [PurchaseController::class, 'myPurchases'])->name('my-purchases');
     });

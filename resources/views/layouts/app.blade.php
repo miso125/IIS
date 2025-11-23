@@ -152,7 +152,7 @@
                     @endrole
 
                     <!-- Vinar Only -->
-                    @role('vinar')
+                    @role('winemaker')
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('vineyards.*') ? 'active' : '' }}" 
                                href="{{ route('vineyards.index') }}">

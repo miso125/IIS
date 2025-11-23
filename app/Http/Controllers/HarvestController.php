@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Harvest;
 use App\Models\WineyardRow;
-use App\Http\Requests\StoreHarvestRequest;
-use App\Http\Requests\UpdateHarvestRequest;
+use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
@@ -24,9 +23,20 @@ class HarvestController extends Controller implements HasMiddleware
 
     public function index()
     {
-        $harvests = Harvest::with(['wineyardrow', 'user'])
-            ->orderBy('date_time', 'desc')
-            ->paginate(15);
+        $user = auth()->user();
+        // Vinár vidí všetko
+        if ($user->hasRole(['admin', 'winemaker'])) {
+            $harvests = Harvest::with(['wineyardrow', 'user'])
+                ->orderBy('date_time', 'desc')
+                ->paginate(15);
+        } else {
+            // Pracovník vidí len tie, ktoré má vykonať (planned) alebo ktoré vykonal on
+            $harvests = Harvest::with(['wineyardrow', 'user'])
+                ->where('status', 'planned')
+                ->orWhere('user', $user->login)
+                ->orderBy('date_time', 'desc')
+                ->paginate(15);
+        }
         
         return view('harvests.index', compact('harvests'));
     }
@@ -40,21 +50,31 @@ class HarvestController extends Controller implements HasMiddleware
         return view('harvests.create', compact('wineyardrows'));
     }
 
-    public function store(StoreHarvestRequest $request)
+    public function store(Request $request)
     {
-        $validated = $request->validated();
-        $validated['user'] = auth()->id();
+        $validated = $request->validate([
+            'wine_row' => 'required|exists:wineyardrow,id_row',
+            'date_time' => 'required|date',
+        ]);
 
-        // Generate next id_harvest
-        $last = Harvest::orderBy('id_harvest', 'desc')->first();
-        $validated['id_harvest'] = $last ? $last->id_harvest + 1 : 1;
-        $validated['date_time'] = \Carbon\Carbon::parse($validated['date_time'])
-    ->format('Y-m-d H:i:s');
+        // Formátovanie dátumu (ak treba, ale date input to posiela väčšinou ok)
+        $dateTime = \Carbon\Carbon::parse($validated['date_time']);
 
-        $harvest = Harvest::create($validated);
+        // Vytvorenie "Plánovanej" sklizne
+        $harvest = Harvest::create([
+            'wine_row' => $validated['wine_row'],
+            'date_time' => $dateTime,
+            'status' => 'planned', // Dôležité: Stav je plánovaný
+            
+            // Ostatné polia (user, weight, sugar) sú NULL, lebo sa ešte nič neobralo
+            'user' => null, 
+            'weight_grapes' => null,
+            'sugariness' => null,
+            'variety' => null, // Môžeme neskôr doplniť z vinohradu
+        ]);
 
-        return redirect()->route('harvests.index', $harvest)
-            ->with('success', 'Harvest registered.');
+        return redirect()->route('harvests.index')
+            ->with('success', 'Harvest planned successfully. Workers can now see it.');
     }
 
 
@@ -75,13 +95,32 @@ class HarvestController extends Controller implements HasMiddleware
         return view('harvests.edit', compact('harvest', 'wineyardrows'));
     }
 
-    public function update(UpdateHarvestRequest $request, Harvest $harvest)
+    public function update(Request $request, Harvest $harvest)
     {
-        $validated = $request->validated();
-        $harvest->update($validated);
+        // Tu už vyžadujeme výsledky práce
+        $validated = $request->validate([
+            'weight_grapes' => 'required|integer|min:1',
+            'sugariness' => 'required|integer|min:10|max:35',
+            'variety' => 'required|string|max:100',
+            'notes' => 'nullable|string',
+        ]);
+
+        // Aktualizácia záznamu
+        $harvest->update([
+            'weight_grapes' => $validated['weight_grapes'],
+            'sugariness' => $validated['sugariness'],
+            'variety' => $validated['variety'],
+            'notes' => $request->notes,
+            
+            // Dôležité zmeny stavu:
+            'status' => 'completed',       // Označíme ako hotové
+            'user' => auth()->user()->login, // Uložíme, KTO to vykonal (Pracovník)
+        ]);
         
-        return redirect()->route('harvests.index', $harvest)
-            ->with('success', 'Harvest updated.');
+        // Ak bol zmenený aj dátum/vinohrad v edite (voliteľné), pridajte to sem
+        
+        return redirect()->route('harvests.index')
+            ->with('success', 'Harvest completed and recorded!');
     }
     public function destroy(Harvest $harvest)
     {

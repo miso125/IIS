@@ -14,12 +14,13 @@ return new class extends Migration
         Schema::create('harvest', function (Blueprint $table) {
             $table->id('id_harvest');
             $table->foreignId('wine_row')->constrained('wineyardrow', 'id_row')->onDelete('cascade');
-            $table->string('user');
+            $table->string('user')->nullable();
             $table->foreign('user')->references('login')->on('user')->onDelete('restrict');
-            $table->integer('weight_grapes');
-            $table->string('variety');
-            $table->integer('sugariness');
+            $table->integer('weight_grapes')->nullable();
+            $table->string('variety')->nullable();
+            $table->integer('sugariness')->nullable();
             $table->dateTime('date_time');
+            $table->string('status')->default('planned');
             $table->timestamps();
         });
     }

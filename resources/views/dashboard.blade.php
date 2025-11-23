@@ -174,6 +174,84 @@
                 </a>
             </div>
         </div>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0"><i class="fas fa-clock"></i> Recent Harvests</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <p>Manage harvest records and bottle wine.</p>
+                        <a href="{{ route('harvests.index') }}" class="btn btn-warning">
+                            Go to Harvests
+                        </a>
+                        <a href="{{ route('harvests.create') }}" class="btn btn-outline-dark ms-2">
+                            Plan New Harvest
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="fas fa-spray-can"></i> Treatments</h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <p>Track vineyard treatments.</p>
+                        <a href="{{ route('treatments.index') }}" class="btn btn-info text-white">
+                            View Treatments
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{-- V sekcii @role('winemaker') --}}
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card border-primary">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="fas fa-wine-bottle"></i> Ready for Bottling</h5>
+                    </div>
+                    <div class="card-body">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Date Harvested</th>
+                                    <th>Variety</th>
+                                    <th>Weight</th>
+                                    <th>Sugar</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($readyToBottle ?? [] as $harvest)
+                                    <tr>
+                                        <td>{{ $harvest->date_time->format('d.m.Y') }}</td>
+                                        <td>{{ $harvest->variety }}</td>
+                                        <td>{{ $harvest->weight_grapes }} kg</td>
+                                        <td>{{ $harvest->sugariness }} °NM</td>
+                                        <td>
+                                            {{-- Tlačidlo vytvorí WineBatch --}}
+                                            <form action="{{ route('harvests.bottle', $harvest) }}" method="POST">
+                                                @csrf
+                                                <button type="submit" class="btn btn-primary btn-sm">
+                                                    <i class="fas fa-wine-bottle"></i> Bottle This
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center text-muted">No completed harvests waiting.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="row">
             <div class="col-md-12">
@@ -227,6 +305,39 @@
 
     <!-- Worker Dashboard -->
     @role('worker')
+    {{-- V sekcii @role('worker') --}}
+        <div class="card mt-4">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="fas fa-clock"></i> Planned Harvests (To Do)</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Vineyard</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{-- Musíme poslať premennú $plannedHarvests z Controlleru --}}
+                        @forelse($plannedHarvests ?? [] as $harvest)
+                            <tr>
+                                <td>{{ $harvest->date_time->format('d.m.Y') }}</td>
+                                <td>{{ $harvest->wineyardrow->variety ?? 'Unknown' }}</td>
+                                <td>
+                                    <a href="{{ route('harvests.edit', $harvest) }}" class="btn btn-success btn-sm">
+                                        <i class="fas fa-check"></i> Complete
+                                    </a>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="3">No pending harvests.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-6">
                 <div class="card">

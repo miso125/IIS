@@ -20,31 +20,9 @@ class StoreHarvestRequest extends FormRequest
                 'required',
                 'exists:wineyardrow,id_row',
             ],
-            'weight_grapes' => [
-                'required',
-                'numeric',
-                'min:0.1',
-                'max:100000',
-            ],
-            'variety' => [
-                'required',
-                'string',
-                'max:100',
-            ],
-            'sugariness' => [
-                'required',
-                'numeric',
-                'min:0',
-                'max:30',
-            ],
             'date_time' => [
                 'required',
                 'date',
-                'before_or_equal:now',
-            ],
-            'notes' => [
-                'nullable',
-                'string',
             ],
         ];
     }

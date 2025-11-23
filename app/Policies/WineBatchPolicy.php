@@ -9,7 +9,7 @@ class WineBatchPolicy
 {
     public function before(User $user): bool|null
     {
-        if ($user->hasRole('admin')) {
+        if ($user->hasRole('admin|winemaker')) {
             return true;
         }
         return null;
@@ -42,13 +42,13 @@ class WineBatchPolicy
     public function update(User $user, WineBatch $winebatch): bool
     {
         return $user->hasPermissionTo('edit winebatch') &&
-               $user->login === $winebatch->harvest->wine_row->user;
+               $user->login === $winebatch->harvestDetail->wineyardrow->user;
     }
 
     public function delete(User $user, WineBatch $winebatch): bool
     {
         return $user->hasPermissionTo('delete winebatch') &&
-               $user->login === $winebatch->harvest->wine_row->user;
+               $user->login === $winebatch->harvestDetail->wineyardrow->user;
     }
 
     public function restore(User $user, WineBatch $varka): bool
