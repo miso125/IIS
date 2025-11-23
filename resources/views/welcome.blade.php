@@ -205,7 +205,7 @@
                     </p>
                     <div class="row mt-4">
                         <div class="col-6">
-                            <h3 class="text-primary fw-bold">1900+</h3>
+                            <h3 class="text-primary fw-bold">{{ $totalVines }}+</h3>
                             <p class="small text-muted">Vines Planted</p>
                         </div>
                         <div class="col-6">
@@ -226,76 +226,61 @@
             </div>
 
             <div class="row g-4">
-                <div class="col-md-6 col-lg-4">
-                    <div class="wine-card">
-                        <div class="wine-header">
-                            <i class="fas fa-wine-glass-alt wine-icon"></i>
-                            <span class="wine-badge badge-white">White</span>
-                        </div>
-                        <div class="card-body text-center p-4">
-                            <h4 class="card-title mb-1">Veltlínske zelené</h4>
-                            <p class="text-muted mb-3">Vintage 2024</p>
-                            <hr class="w-25 mx-auto my-3">
-                            <p class="card-text small">
-                                A fresh, aromatic white wine with hints of almond and green apple. Perfect for warm evenings.
-                            </p>
-                            <ul class="list-inline text-muted small mt-3">
-                                <li class="list-inline-item"><i class="fas fa-percentage"></i> 12.5% Alc.</li>
-                                <li class="list-inline-item"><i class="fas fa-tint"></i> Dry</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                @forelse($wines as $wine)
+                    @php
+                        // Determine color and badge class based on the vineyard data
+                        $wineColor = $wine->harvestDetail->wineyardrow->colour ?? 'white';
+                        $badgeClass = ($wineColor == 'red') ? 'badge-red' : 'badge-white';
+                        $iconClass = ($wineColor == 'red') ? 'fa-wine-glass' : 'fa-wine-glass-alt';
+                    @endphp
 
-                <div class="col-md-6 col-lg-4">
-                    <div class="wine-card">
-                        <div class="wine-header">
-                            <i class="fas fa-wine-glass wine-icon"></i>
-                            <span class="wine-badge badge-red">Red</span>
-                        </div>
-                        <div class="card-body text-center p-4">
-                            <h4 class="card-title mb-1">Frankovka modrá</h4>
-                            <p class="text-muted mb-3">Vintage 2024</p>
-                            <hr class="w-25 mx-auto my-3">
-                            <p class="card-text small">
-                                A rich, full-bodied red with distinct berry notes and a smooth finish. Aged in oak barrels.
-                            </p>
-                            <ul class="list-inline text-muted small mt-3">
-                                <li class="list-inline-item"><i class="fas fa-percentage"></i> 13.0% Alc.</li>
-                                <li class="list-inline-item"><i class="fas fa-tint"></i> Dry</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                    <div class="col-md-6 col-lg-4">
+                        <div class="wine-card">
+                            <div class="wine-header">
+                                <i class="fas {{ $iconClass }} wine-icon"></i>
+                                <span class="wine-badge {{ $badgeClass }}">{{ ucfirst($wineColor) }}</span>
+                            </div>
+                            <div class="card-body text-center p-4">
+                                <h4 class="card-title mb-1">{{ $wine->variety }}</h4>
+                                <p class="text-muted mb-3">Vintage {{ $wine->vintage }}</p>
+                                <hr class="w-25 mx-auto my-3">
+                                
+                                <p class="card-text small text-muted">
+                                    {{ $wine->harvestDetail->notes ?? 'A premium wine produced with care from our finest local vineyards.' }}
+                                </p>
 
-                <div class="col-md-6 col-lg-4">
-                    <div class="wine-card">
-                        <div class="wine-header">
-                            <i class="fas fa-wine-glass-alt wine-icon"></i>
-                            <span class="wine-badge badge-white">White</span>
-                        </div>
-                        <div class="card-body text-center p-4">
-                            <h4 class="card-title mb-1">Riesling</h4>
-                            <p class="text-muted mb-3">Vintage 2024</p>
-                            <hr class="w-25 mx-auto my-3">
-                            <p class="card-text small">
-                                Known as the king of wines. High acidity balanced with elegant fruitiness and minerality.
-                            </p>
-                            <ul class="list-inline text-muted small mt-3">
-                                <li class="list-inline-item"><i class="fas fa-percentage"></i> 12.8% Alc.</li>
-                                <li class="list-inline-item"><i class="fas fa-tint"></i> Semi-Dry</li>
-                            </ul>
+                                <ul class="list-inline text-muted small mt-3">
+                                    <li class="list-inline-item" title="Alcohol Percentage">
+                                        <i class="fas fa-percentage"></i> {{ $wine->alcohol_percentage }}%
+                                    </li>
+                                    <li class="list-inline-item" title="Sugar Content">
+                                        <i class="fas fa-flask"></i> {{ $wine->sugariness }} °NM
+                                    </li>
+                                </ul>
+                                
+                                <div class="mt-3">
+                                    <h5 class="text-primary fw-bold">{{ number_format($wine->price, 2) }} €</h5>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @empty
+                    <div class="col-12 text-center">
+                        <div class="alert alert-light">
+                            <i class="fas fa-wine-bottle mb-2" style="font-size: 2rem; color: #ccc;"></i>
+                            <p class="mb-0 text-muted">No wines are currently available for public sale.</p>
+                            <p class="small text-muted">Please check back after our next harvest bottling.</p>
+                        </div>
+                    </div>
+                @endforelse
             </div>
 
             <div class="text-center mt-5">
-                <p class="text-muted">Want to see pricing and purchase?</p>
+                <p class="text-muted">Want to purchase?</p>
                 @guest
-                    <a href="{{ route('register') }}" class="btn btn-outline-dark">Register to View Prices</a>
+                    <a href="{{ route('register') }}" class="btn btn-outline-dark">Register to Shop</a>
                 @else
-                    <a href="{{ route('wine_batches.index') }}" class="btn btn-primary-custom">Go to Shop</a>
+                    <a href="{{ route('wine_batches.index') }}" class="btn btn-primary-custom" style="background-color: var(--primary-color); color: white; padding: 10px 30px; text-decoration: none; border-radius: 5px;">Go to Shop</a>
                 @endguest
             </div>
         </div>
