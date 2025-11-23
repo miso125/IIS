@@ -58,7 +58,7 @@
                                 <span class="badge bg-warning text-dark">Planned</span>
                             @endif
                         </td>
-
+                        @role('winemaker')
                         <td>
                             <a href="{{ route('treatments.edit', $treatment) }}"
                                class="btn btn-warning btn-sm">
@@ -78,6 +78,40 @@
                                 </button>
                             </form>
                         </td>
+                        @endrole
+
+                        @role('worker')
+                        <td>
+                            <form action="{{ route('treatments.update', $treatment->id_treatment) }}" 
+                                method="POST" 
+                                style="display:inline-block;">
+                                @csrf
+                                @method('PUT')
+
+                                <input type="hidden" name="type" value="{{ $treatment->type }}">
+                                <input type="hidden" name="wine_row" value="{{ $treatment->wine_row }}">
+                                <input type="hidden" name="treatment_product" value="{{ $treatment->treatment_product }}">
+                                <input type="hidden" name="concentration" value="{{ $treatment->concentration }}">
+                                <input type="hidden" name="notes" value="{{ $treatment->notes }}">
+                                <input type="hidden" name="planned_date" value="{{ $treatment->planned_date }}">
+
+                                @if($treatment->is_completed)
+                                    <input type="hidden" name="is_completed" value="0">
+                                    <button type="submit" class="btn btn-secondary btn-sm">
+                                        Undo
+                                    </button>
+                                @else
+                                    <input type="hidden" name="is_completed" value="1">
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        Complete
+                                    </button>
+                                @endif
+                            </form>
+                        </td>
+                        @endrole
+
+
+
                     </tr>
                 @endforeach
             </tbody>
