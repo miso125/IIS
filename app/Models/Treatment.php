@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Treatment extends Model
 {
     protected $table = 'treatment';
+
     protected $primaryKey = 'id_treatment';
     protected $keyType = 'int';
     public $timestamps = false;
@@ -23,6 +24,12 @@ class Treatment extends Model
         'notes',
         'is_completed',
     ];
+
+    protected $casts = [
+        'date_time' => 'datetime',
+        'planned_date' => 'datetime',
+    ];
+
 
     public function winerow(): BelongsTo
     {

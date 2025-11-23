@@ -108,6 +108,9 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+Route::get('/harvests/check-chemical/{wineRow}/{date}', [HarvestController::class, 'checkChemical'])
+    ->name('harvests.checkChemical');
+
 // ============================================
 // Admin routes – Len pre admins
 // ============================================
@@ -120,3 +123,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         return view('admin.reports');
     })->name('admin.reports');
 });
+
+
+
+Route::post('/harvests/check-date', [HarvestController::class, 'checkDate']);

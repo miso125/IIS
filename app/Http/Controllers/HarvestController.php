@@ -7,6 +7,7 @@ use App\Models\WineyardRow;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
+use Carbon\Carbon;
 
 class HarvestController extends Controller implements HasMiddleware
 {
@@ -54,28 +55,47 @@ class HarvestController extends Controller implements HasMiddleware
     {
         $validated = $request->validate([
             'wine_row' => 'required|exists:wineyardrow,id_row',
-            'date_time' => 'required|date',
+            'date_time' => 'required|string',
         ]);
 
-        // Formátovanie dátumu (ak treba, ale date input to posiela väčšinou ok)
-        $dateTime = \Carbon\Carbon::parse($validated['date_time']);
+        $dateTime = Carbon::createFromFormat('d.m.Y H:i', $validated['date_time']);
 
-        // Vytvorenie "Plánovanej" sklizne
-        $harvest = Harvest::create([
+        $treatments = \App\Models\Treatment::where('wine_row', $validated['wine_row'])
+            ->whereIn('type', ['Chemical Spraying', 'Chemical'])
+            ->get();
+
+        foreach ($treatments as $treatment) {
+
+            $treatmentDate = $treatment->planned_date
+                ? Carbon::parse($treatment->planned_date)
+                : Carbon::parse($treatment->date_time);
+
+            if ($treatmentDate->lte($dateTime) && $treatmentDate->diffInDays($dateTime) < 14) {
+                return back()
+                    ->withInput()
+                    ->withErrors([
+                        'date_time' =>
+                            'Harvest cannot be planned within 14 days after a chemical treatment on '
+                            . $treatmentDate->format('d.m.Y H:i') . '.',
+                    ]);
+            }
+        }
+
+
+        Harvest::create([
             'wine_row' => $validated['wine_row'],
             'date_time' => $dateTime,
-            'status' => 'planned', // Dôležité: Stav je plánovaný
-            
-            // Ostatné polia (user, weight, sugar) sú NULL, lebo sa ešte nič neobralo
-            'user' => null, 
+            'status' => 'planned',
+            'user' => null,
             'weight_grapes' => null,
             'sugariness' => null,
-            'variety' => null, // Môžeme neskôr doplniť z vinohradu
+            'variety' => null,
         ]);
 
         return redirect()->route('harvests.index')
             ->with('success', 'Harvest planned successfully. Workers can now see it.');
     }
+
 
 
 
@@ -87,24 +107,13 @@ class HarvestController extends Controller implements HasMiddleware
         return view('harvests.show', compact('harvest', 'batches'));
     }
 
-    public function edit($id)
+    public function edit(Harvest $harvest)
     {
-        if (!auth()->user()->hasRole('winemaker|worker')) {
-            abort(403);
-        }
+        // docasne all
+        $wineyardrows = WineyardRow::all();
 
-        // Worker can't edit finished harvests
-        if (auth()->user()->hasRole('worker')) {
-            $harvest = Harvest::findOrFail($id);
-
-            if ($harvest->status === 'completed' || $harvest->status === 'bottled') {
-                abort(403);
-            }
-        }
-
-        return view('harvests.edit', compact('harvest'));
+        return view('harvests.edit', compact('harvest', 'wineyardrows'));
     }
-
 
     public function update(Request $request, Harvest $harvest)
     {
@@ -140,4 +149,66 @@ class HarvestController extends Controller implements HasMiddleware
         return redirect()->route('harvests.index')
             ->with('success', 'Harvest deleted.');
     }
+
+    public function checkChemical($wineRow, $date)
+    {
+        $dateTime = Carbon::createFromFormat('d.m.Y H:i', $date);
+
+        $treatments = \App\Models\Treatment::where('wine_row', $wineRow)
+            ->whereIn('type', ['Chemical Spraying','Chemical'])
+            ->get();
+
+        foreach ($treatments as $treatment) {
+
+            $treatmentDate = $treatment->planned_date
+                ? Carbon::parse($treatment->planned_date)
+                : Carbon::parse($treatment->date_time);
+
+            if ($treatmentDate->lte($dateTime) && $treatmentDate->diffInDays($dateTime) < 14) {
+                return response()->json([
+                    'allowed' => false,
+                    'message' =>
+                        'NOT ALLOWED: Chemical treatment on '
+                        . $treatmentDate->format('d.m.Y H:i')
+                        . ' is less than 14 days before planned harvest.'
+                ]);
+            }
+        }
+
+        return response()->json(['allowed' => true]);
+    }
+
+    public function checkDate(Request $request)
+    {
+        $request->validate([
+            'wine_row' => 'required|exists:wineyardrow,id_row',
+            'date_time' => 'required|string',
+        ]);
+
+        $row = $request->wine_row;
+        $dateTime = Carbon::createFromFormat('d.m.Y H:i', $request->date_time);
+
+        $treatments = \App\Models\Treatment::where('wine_row', $row)
+            ->whereIn('type', ['Chemical Spraying','Chemical'])
+            ->get();
+
+        foreach ($treatments as $treatment) {
+            $tDate = Carbon::parse($treatment->date_time);
+
+            if ($tDate->diffInDays($dateTime, false) >= 0 &&
+                $tDate->diffInDays($dateTime, false) < 14) {
+
+                return response()->json([
+                    'valid' => false,
+                    'message' => 'Harvest cannot be planned within 14 days after any chemical treatment.'
+                ]);
+            }
+        }
+
+        return response()->json(['valid' => true]);
+    }
+
+
+
+
 }
