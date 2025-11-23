@@ -205,7 +205,7 @@
                     </p>
                     <div class="row mt-4">
                         <div class="col-6">
-                            <h3 class="text-primary fw-bold">1900+</h3>
+                            <h3 class="text-primary fw-bold">{{ $totalVines }}+</h3>
                             <p class="small text-muted">Vines Planted</p>
                         </div>
                         <div class="col-6">

@@ -8,12 +8,21 @@ use App\Http\Controllers\HarvestController;
 use App\Http\Controllers\TreatmentController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\WineBatchController;
+use App\Models\WineyardRow;
 use App\Models\WineBatch;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 
 Route::get('/', function () {
-    return view('welcome');
+    $wines = WineBatch::with('harvestDetail.wineyardrow')
+                ->where('number_of_bottles', '>', 0)
+                ->latest('date_time')
+                ->take(3)
+                ->get();
+
+    // Calculate total vines for the "About Us" section
+    $totalVines = WineyardRow::sum('number_of_vines');
+    return view('welcome', compact('wines', 'totalVines'));
 })->name('home');
 
 
@@ -76,7 +85,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('vineyards', WineyardRowController::class);
         Route::resource('harvests', HarvestController::class);
         Route::resource('treatments', TreatmentController::class);
-        Route::resource('wine_batches', WineBatchController::class);
+        Route::resource('wine_batches', WineBatchController::class)->except(['index','show']);
         Route::post('/harvests/{harvest}/bottle', [WineBatchController::class, 'createFromHarvest'])
              ->name('harvests.bottle');
     });
