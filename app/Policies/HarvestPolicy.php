@@ -40,21 +40,11 @@ class HarvestPolicy
     /**
      * Len vinár-vlastník môže editovať
      */
-    public function update(User $user, Harvest $harvest): bool
+    public function update(User $user, Harvest $harvest)
     {
-        // worker who created harvest
-        if ($user->hasRole('worker')) {
-            return $user->login === $harvest->user || $harvest->status === 'planned';
-        }
-
-        // 2. Winemaker: Can edit if they own the vineyard row AND have permission
-        if ($harvest->wineyardrow && $user->login === $harvest->wineyardrow->user &&
-            $user->hasPermissionTo('edit harvest')) {
-            return true;
-        }
-
-        return false;
+        return $user->hasRole(['worker','winemaker']);
     }
+
 
 
 

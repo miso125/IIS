@@ -9,22 +9,11 @@ use App\Http\Controllers\TreatmentController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\WineBatchController;
 use App\Models\WineBatch;
-use App\Models\WineyardRow;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 
 Route::get('/', function () {
-    // Fetch 3 latest wines that are in stock
-    $wines = WineBatch::with('harvestDetail.wineyardrow')
-                ->where('number_of_bottles', '>', 0)
-                ->latest('date_time')
-                ->take(3)
-                ->get();
-
-    // Calculate total vines for the "About Us" section
-    $totalVines = WineyardRow::sum('number_of_vines');
-
-    return view('welcome', compact('wines', 'totalVines'));
+    return view('welcome');
 })->name('home');
 
 
@@ -87,7 +76,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('vineyards', WineyardRowController::class);
         Route::resource('harvests', HarvestController::class);
         Route::resource('treatments', TreatmentController::class);
-        Route::resource('wine_batches', WineBatchController::class)->except(['index','show']);
+        Route::resource('wine_batches', WineBatchController::class);
         Route::post('/harvests/{harvest}/bottle', [WineBatchController::class, 'createFromHarvest'])
              ->name('harvests.bottle');
     });
@@ -119,6 +108,9 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+Route::get('/harvests/check-chemical/{wineRow}/{date}', [HarvestController::class, 'checkChemical'])
+    ->name('harvests.checkChemical');
+
 // ============================================
 // Admin routes – Len pre admins
 // ============================================
@@ -131,3 +123,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         return view('admin.reports');
     })->name('admin.reports');
 });
+
+
+
+Route::post('/harvests/check-date', [HarvestController::class, 'checkDate']);

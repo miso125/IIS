@@ -16,7 +16,6 @@ class TreatmentController extends Controller
     {
         return [
             'auth',
-            // Only restrict creation/updating/deleting to roles, index/show open to vinar
             'role:worker' => ['only' => ['create','store','edit','update','destroy']],
         ];
     }
@@ -59,22 +58,20 @@ class TreatmentController extends Controller
             'is_completed' => 'nullable|boolean',
         ]);
 
-        // Convert date format for database storage
         if (isset($validatedData['planned_date'])) {
             $validatedData['planned_date'] = \Carbon\Carbon::createFromFormat('d.m.Y', $validatedData['planned_date'])->format('Y-m-d');
         }
 
-        // Handle checkbox for is_completed
         if (!isset($validatedData['is_completed'])) {
             $validatedData['is_completed'] = false;
         } else {
             $validatedData['is_completed'] = true;
         }
 
-        // Assign current user
+        // assign  user
         $validatedData['user'] = auth()->user()->login;
 
-        // Assign current datetime for NOT NULL column
+        // assign current datetime
         $validatedData['date_time'] = now();
 
         Treatment::create($validatedData);
@@ -97,10 +94,8 @@ class TreatmentController extends Controller
      */
     public function edit($id)
     {
-        // Find the treatment by its ID, or fail with a 404 error if not found.
         $treatment = Treatment::findOrFail($id);
 
-        // This will use the 'update' method in your TreatmentPolicy
         $wineRows = WineyardRow::all();
         $this->authorize('update', $treatment);
 
@@ -123,19 +118,13 @@ class TreatmentController extends Controller
             'is_completed' => 'nullable|boolean',
         ]);
 
-        // Convert date format for database storage
         if (isset($validatedData['planned_date'])) {
             $validatedData['planned_date'] = \Carbon\Carbon::createFromFormat('d.m.Y', $validatedData['planned_date'])->format('Y-m-d');
         } else {
             $validatedData['planned_date'] = null;
         }
 
-        // Handle checkbox for is_completed
-        if (!isset($validatedData['is_completed'])) {
-            $validatedData['is_completed'] = false;
-        } else {
-            $validatedData['is_completed'] = true;
-        }
+        $validatedData['is_completed'] = $request->boolean('is_completed');
 
         $treatment->update($validatedData);
 

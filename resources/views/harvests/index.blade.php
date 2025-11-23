@@ -118,6 +118,7 @@
                     <th>Variety</th>
                     <th>Sugariness (°NM)</th>
                     <th>Date & Time</th>
+                    <th>Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -141,6 +142,17 @@
                                 <span class="badge bg-warning">Planned</span>
                             @endif
                         </td>
+                        
+                        <td>
+                            @if($harvest->status != 'bottled')
+                            <a href="{{ route('harvests.edit', $harvest->id_harvest) }}" 
+                            class="btn btn-warning btn-sm">
+                                Edit
+                            </a>
+                            @endif
+                        </td>
+
+
                     </tr>
                 @empty
                     <tr>
