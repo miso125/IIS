@@ -87,13 +87,24 @@ class HarvestController extends Controller implements HasMiddleware
         return view('harvests.show', compact('harvest', 'batches'));
     }
 
-    public function edit(Harvest $harvest)
+    public function edit($id)
     {
-        // docasne all
-        $wineyardrows = WineyardRow::all();
+        if (!auth()->user()->hasRole('winemaker|worker')) {
+            abort(403);
+        }
 
-        return view('harvests.edit', compact('harvest', 'wineyardrows'));
+        // Worker can't edit finished harvests
+        if (auth()->user()->hasRole('worker')) {
+            $harvest = Harvest::findOrFail($id);
+
+            if ($harvest->status === 'completed' || $harvest->status === 'bottled') {
+                abort(403);
+            }
+        }
+
+        return view('harvests.edit', compact('harvest'));
     }
+
 
     public function update(Request $request, Harvest $harvest)
     {

@@ -117,7 +117,7 @@
             </tbody>
         </table>
 
-        {{-- Pagination --}}
+        {{-- pagination --}}
         <div class="d-flex justify-content-center mt-3">
             <nav aria-label="Treatments pagination">
                 <ul class="pagination">
@@ -132,7 +132,6 @@
                         </li>
                     @endif
 
-                    {{-- Page numbers (simple: 1..lastPage) --}}
                     @php
                         $start = 1;
                         $end = $treatments->lastPage();
@@ -167,7 +166,7 @@
                         </li>
                     @endif
 
-                    {{-- Next --}}
+                    {{-- next --}}
                     @if ($treatments->hasMorePages())
                         <li class="page-item">
                             <a class="page-link" href="{{ $treatments->nextPageUrl() }}" rel="next">Next &raquo;</a>
