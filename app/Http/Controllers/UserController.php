@@ -107,6 +107,17 @@ class UserController extends Controller implements HasMiddleware
             'role' => 'required|exists:roles,name', // Validate role exists
         ]);
 
+        if (auth()->user()->login === $user->login) {
+            if ($request->role !== $user->role) {
+                return back()
+                    ->withInput()
+                    ->withErrors([
+                        'role' => 'You cannot change your own role.'
+                    ]);
+            }
+        }
+
+
         // Update basic details
         $user->update([
             'name' => $validated['name'],
@@ -127,6 +138,16 @@ class UserController extends Controller implements HasMiddleware
     public function destroy(User $user)
     {
         $this->authorize('delete', $user);
+
+        if (auth()->user()->login === $user->login) {
+            if ($user->role === 'admin') {
+                return back()
+                    ->withInput()
+                    ->withErrors([
+                        'role' => 'You cannot delete yourself.'
+                    ]);
+            }
+        }
         
         $user->delete();
         return redirect()->route('users.index')
