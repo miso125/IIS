@@ -25,7 +25,8 @@ class TreatmentSeeder extends Seeder
             [
                 'wine_row' => 1,
                 'user' => 'pracovnik1',
-                'date_time' => now()->subDays(60),
+                'planned_date' => now()->subDays(40),
+                'date_time' => now()->subDays(80),
                 'type' => 'Postrek',
                 'treatment_product' => 'Kuprikol',
                 'concentration' => 0.5,
@@ -34,7 +35,8 @@ class TreatmentSeeder extends Seeder
             [
                 'wine_row' => 1,
                 'user' => 'pracovnik1',
-                'date_time' => now()->subDays(45),
+                'planned_date' => now()->subDays(45),
+                'date_time' => now()->subDays(60),
                 'type' => 'Hnojenie',
                 'treatment_product' => 'NPK hnojivo',
                 'concentration' => 1.2,
@@ -43,7 +45,8 @@ class TreatmentSeeder extends Seeder
             [
                 'wine_row' => 2,
                 'user' => 'pracovnik1',
-                'date_time' => now()->subDays(30),
+                'planned_date' => now()->subDays(30),
+                'date_time' => now()->subDays(60),
                 'type' => 'Rez',
                 'treatment_product' => null,
                 'concentration' => null,

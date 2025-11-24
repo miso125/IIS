@@ -117,12 +117,13 @@ class TreatmentController extends Controller
             'treatment_product' => 'nullable|string|max:255',
             'concentration' => 'nullable|numeric|between:0,100',
             'notes' => 'nullable|string',
-            'planned_date' => 'nullable|date_format:d.m.Y',
+            'planned_date' => 'nullable',
             'is_completed' => 'nullable|boolean',
         ]);
 
         if (isset($validatedData['planned_date'])) {
-            $validatedData['planned_date'] = \Carbon\Carbon::createFromFormat('d.m.Y', $validatedData['planned_date'])->format('Y-m-d');
+            $validatedData['planned_date'] = \Carbon\Carbon::parse($validatedData['planned_date'])
+        ->format('d.m.Y');
         } else {
             $validatedData['planned_date'] = null;
         }
