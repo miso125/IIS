@@ -49,11 +49,9 @@
                                 </button>
                             </form>
                             @if($harvest->status == 'completed')
-                                <td>
-                                    <a href="{{ route('harvests.bottle.create', $harvest) }}" class="btn btn-primary btn-sm">
-                                        <i class="fas fa-wine-bottle"></i> Bottle This
-                                    </a>
-                                </td>
+                                <a href="{{ route('harvests.bottle.create', $harvest) }}" class="btn btn-primary btn-sm">
+                                    <i class="fas fa-wine-bottle"></i> Bottle This
+                                </a>
                             @elseif($harvest->status == 'bottled')
                                 <span class="badge bg-success">Bottled</span>
                             @else

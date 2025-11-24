@@ -232,11 +232,9 @@
                                         <td>{{ $harvest->weight_grapes }} kg</td>
                                         <td>{{ $harvest->sugariness }} °NM</td>
                                         <td>
-                                            <td>
-                                                <a href="{{ route('harvests.bottle.create', $harvest) }}" class="btn btn-primary btn-sm">
-                                                    <i class="fas fa-wine-bottle"></i> Bottle This
-                                                </a>
-                                            </td>
+                                            <a href="{{ route('harvests.bottle.create', $harvest) }}" class="btn btn-primary btn-sm">
+                                                <i class="fas fa-wine-bottle"></i> Bottle This
+                                            </a>
                                         </td>
                                     </tr>
                                 @empty
