@@ -17,7 +17,6 @@ Route::get('/', function () {
     $wines = WineBatch::with('harvestDetail.wineyardrow')
                 ->where('number_of_bottles', '>', 0)
                 ->latest('date_time')
-                ->take(3)
                 ->get();
 
     // Calculate total vines for the "About Us" section

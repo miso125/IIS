@@ -56,6 +56,7 @@ class HarvestController extends Controller implements HasMiddleware
         $validated = $request->validate([
             'wine_row' => 'required|exists:wineyardrow,id_row',
             'date_time' => 'required|string',
+            'variety'   => 'required|string|max:100',
         ]);
 
         $dateTime = Carbon::createFromFormat('d.m.Y H:i', $validated['date_time']);
@@ -89,7 +90,7 @@ class HarvestController extends Controller implements HasMiddleware
             'user' => null,
             'weight_grapes' => null,
             'sugariness' => null,
-            'variety' => null,
+            'variety' => $validated['variety'],
         ]);
 
         return redirect()->route('harvests.index')

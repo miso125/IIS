@@ -65,7 +65,7 @@
                 const fp = flatpickr(dateInput, {
                     enableTime: true,
                     dateFormat: "d.m.Y H:i",
-                    defaultDate: "{{ old('date_time', now()->format('d.m.Y H:i')) }}",
+                    defaultDate: "{{ old('date_time', $harvest->date_time->format('d.m.Y H:i')) }}",
                     onChange: runCheck
                 });
 
@@ -105,7 +105,7 @@
         </div>
 
         <button type="submit" class="btn btn-primary">Update Harvest</button>
-        <a href="{{ route('harvests.show', $harvest) }}" class="btn btn-secondary">Cancel</a>
+        <a href="{{ route('harvests.index', $harvest) }}" class="btn btn-secondary">Cancel</a>
     </form>
 </div>
 @endsection

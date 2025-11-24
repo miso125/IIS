@@ -148,6 +148,12 @@
             </div>
 
             <div class="mb-3">
+                <label for="variety" class="form-label">Variety</label>
+                <input type="text" class="form-control" id="variety"
+                       name="variety" value="{{ old('variety') }}" required>
+            </div>
+
+            <div class="mb-3">
                 <label for="date_time" class="form-label">Planned Date</label>
                 <input type="text" class="form-control" id="date_time"
                        name="date_time" value="{{ old('date_time') }}" required>
@@ -161,13 +167,12 @@
                 const wineRowSelect = document.getElementById('wine_row');
                 const dateInput = document.getElementById('date_time');
 
-                const fp = flatpickr(dateInput, {
-                    enableTime: true,
-                    dateFormat: "d.m.Y H:i",
-                    defaultDate: "{{ old('date_time', now()->format('d.m.Y H:i')) }}",
-                    onChange: runCheck
-                });
-
+    const fp = flatpickr(dateInput, {
+        enableTime: true,
+        dateFormat: "d.m.Y H:i",
+        defaultDate: "{{ old('date_time', $harvest->date_time ? \Carbon\Carbon::parse($harvest->date_time)->format('d.m.Y H:i') : '') }}",
+        onChange: runCheck
+    });
                 wineRowSelect.addEventListener('change', runCheck);
 
                 function runCheck() {
