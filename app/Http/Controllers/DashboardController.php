@@ -12,6 +12,9 @@ use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
+    /**
+     * Dashboard controller based on role
+     */
     public function index()
     {
         $user = auth()->user();
@@ -44,7 +47,7 @@ class DashboardController extends Controller
     }
 
     /**
-     * Vinar Dashboard
+     * Winemaker Dashboard
      */
     private function winemakerDashboard()
     {

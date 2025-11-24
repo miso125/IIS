@@ -35,6 +35,9 @@ class User extends Authenticable
     {
         return 'password_hash';
     }
+    /**
+     * Definitions of relationships
+     */
     public function wineyardrows(): HasMany
     {
         return $this->hasMany(WineyardRow::class, 'user', 'login');

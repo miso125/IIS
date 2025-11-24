@@ -29,7 +29,9 @@ class Treatment extends Model
         'date_time' => 'datetime',
         'planned_date' => 'datetime',
     ];
-
+    /**
+     * Definitions of relationships
+     */
 
     public function winerow(): BelongsTo
     {

@@ -23,6 +23,9 @@ class WineyardRow extends Model
     protected $casts = [
         'wine_row' => 'winerow',
     ];
+    /**
+     * Definitions of relationships
+     */
 
     public function owner(): BelongsTo
     {

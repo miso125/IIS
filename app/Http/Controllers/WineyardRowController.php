@@ -8,8 +8,14 @@ use App\Http\Requests\UpdateWineyardRowRequest;
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
 
+/**
+ * Manages Wineyard Rows.
+ */
 class WineyardRowController extends Controller implements HasMiddleware
 {
+    /**
+     * Define authorization middleware for the controller.
+     */
     public static function middleware(): array
     {
         return [
@@ -20,7 +26,9 @@ class WineyardRowController extends Controller implements HasMiddleware
             new Middleware('permission:delete winerow', only: ['destroy']),
         ];
     }
-
+    /**
+     * Display a listing of wineyards.
+     */
     public function index()
     {
         $this->authorize('viewAny', WineyardRow::class);
@@ -28,13 +36,16 @@ class WineyardRowController extends Controller implements HasMiddleware
         if (auth()->user()->hasRole('admin')) {
             $winerows = WineyardRow::with('owner')->paginate(15);
         } else {
-            $winerows = WineyardRow::where('user', auth()->user()->login) // Filtrujeme podľa loginu
+            $winerows = WineyardRow::where('user', auth()->user()->login) // FFilter based on login
                         ->paginate(15);
         }
         
         return view('vineyards.index', compact('winerows'));
     }
 
+    /**
+     * Show the form for creating a new wineyard.
+     */
     public function create()
     {
         $this->authorize('create', WineyardRow::class);
@@ -42,13 +53,16 @@ class WineyardRowController extends Controller implements HasMiddleware
         return view('vineyards.create');
     }
 
+    /**
+     * Store a newly created wineyard in the database.
+     */
     public function store(StoreWineyardRowRequest $request)
     {
         $this->authorize('create', WineyardRow::class);
         
         $validated = $request->validated();
         
-        // Automaticky pridelíme aktuálneho užívateľa ako vlastníka
+        // Assign user as owner
         $validated['user'] = auth()->user()->login;
         
         $winerow = WineyardRow::create($validated);
@@ -57,6 +71,9 @@ class WineyardRowController extends Controller implements HasMiddleware
             ->with('success', 'Wineyard Row created.');
     }
 
+    /**
+     * Display the specified wineyard details.
+     */
     public function show(WineyardRow $winerow)
     {
         $this->authorize('view', $winerow);
@@ -67,20 +84,23 @@ class WineyardRowController extends Controller implements HasMiddleware
         return view('vineyards.show', compact('winerow', 'harvests', 'treatments'));
     }
 
-    public function edit(WineyardRow $vineyard) // Laravel automaticky nájde podľa ID v route
+    /**
+     * Show the form for editing the wineyard.
+     */
+    public function edit(WineyardRow $vineyard)
     {
         $this->authorize('update', $vineyard);
         
-        // Do view posielame premennú $vineyard
         return view('vineyards.edit', compact('vineyard'));
     }
 
+    /**
+     * Update the specified wineyard in storage.
+     */
     public function update(UpdateWineyardRowRequest $request, WineyardRow $vineyard)
     {
         $this->authorize('update', $vineyard);
         
-        // Na UpdateWineyardRowRequest musíte pridať pravidlá (rules), inak validated() bude prázdne!
-        // Pre teraz použijeme StoreWineyardRowRequest alebo skopírujte pravidlá
         $validated = $request->validate([
             'variety' => 'required|string|max:100',
             'number_of_vines' => 'required|integer|min:1|max:500',
@@ -94,6 +114,9 @@ class WineyardRowController extends Controller implements HasMiddleware
             ->with('success', 'Vineyard updated successfully.');
     }
 
+    /**
+     * Remove the specified wineyard from storage.
+     */
     public function destroy(WineyardRow $vineyard)
     {
         $this->authorize('delete', $vineyard);

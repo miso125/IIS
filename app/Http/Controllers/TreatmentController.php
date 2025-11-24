@@ -12,6 +12,9 @@ class TreatmentController extends Controller
 {
     use AuthorizesRequests, ValidatesRequests;
 
+    /**
+     * Define authorization middleware for the controller.
+     */
     public static function middleware(): array
     {
         return [

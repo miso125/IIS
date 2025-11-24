@@ -22,6 +22,9 @@ class Purchase extends Model
     protected $casts = [
         'date_time' => 'datetime',
     ];
+    /**
+     * Definitions of relationships
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user', 'login');

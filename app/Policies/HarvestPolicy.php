@@ -5,6 +5,9 @@ namespace App\Policies;
 use App\Models\Harvest;
 use App\Models\User;
 
+/**
+ * Policy class for handling authorization of Harvest model actions.
+ */
 class HarvestPolicy
 {
     public function before(User $user): bool|null
@@ -15,6 +18,9 @@ class HarvestPolicy
         return null;
     }
 
+    /**
+     * Determine whether the user can view any purchase entries.
+     */
     public function viewAny(User $user): bool
     {
         return $user->hasPermissionTo('view harvest');
@@ -26,31 +32,19 @@ class HarvestPolicy
                $user->login === $harvest->user;
     }
 
-    /**
-     * Len vinári a pracovníci môžu nahlasovať sklizeň
-     */
     public function create(User $user): bool
     {
         return $user->hasRole('worker') || $user->hasPermissionTo('create harvest');
     }
 
-
-
-
-    /**
-     * Len vinár-vlastník môže editovať
-     */
     public function update(User $user, Harvest $harvest)
     {
         return $user->hasRole(['worker','winemaker']);
     }
 
-
-
-
     public function delete(User $user, Harvest $harvest): bool
     {
-        if (($user->hasRole('worker') || $user->hasRole('winemaker'))) {
+        if ($user->hasRole('worker') || $user->hasRole('winemaker')) {
             return true;
         }
 

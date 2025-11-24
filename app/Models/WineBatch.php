@@ -23,6 +23,9 @@ class WineBatch extends Model
         'price',
         'date_time',
     ];
+    /**
+     * Definitions of relationships
+     */
 
     public function harvestDetail(): BelongsTo
     {

@@ -53,29 +53,29 @@ class PurchaseController extends Controller
                 $pricePerUnit = $batch->price;
                 $totalPrice = $pricePerUnit * $request->quantity;
 
-                // 1. Vytvoríme hlavičku nákupu
+                // Create header
                 $purchase = Purchase::create([
                     'user' => auth()->user()->login,
                     'date_time' => now(),
-                    'total_price' => $totalPrice, // Opravený názov stĺpca
+                    'total_price' => $totalPrice,
                 ]);
 
-                // 2. Vytvoríme položku
+                // Create item 
                 PurchaseItem::create([
                     'purchase' => $purchase->id_purchase,
                     'wine_batch' => $batch->batch_number,
-                    'number_of_bottles' => $request->quantity, // Váš názov stĺpca v purchaseitem
+                    'number_of_bottles' => $request->quantity, 
                     'item_price' => $pricePerUnit,
-                    'stock' => true // Predpokladám, že toto znamená "vydané zo skladu"
+                    'stock' => true
                 ]);
 
-                // 3. Odpočítame zo skladu
+                // decrement from stock
                 $batch->decrement('number_of_bottles', $request->quantity);
             });
 
-            return redirect()->route('purchases.index')->with('success', 'Víno bolo úspešne zakúpené!');
+            return redirect()->route('purchases.index')->with('success', 'Wine was succesfully purchased!');
         } catch (\Exception $e) {
-            return back()->with('error', 'Chyba nákupu: ' . $e->getMessage());
+            return back()->with('error', 'Purchase error: ' . $e->getMessage());
         }
     }
 

@@ -5,6 +5,9 @@ namespace App\Policies;
 use App\Models\User;
 use App\Models\Purchase;
 
+/**
+ * Policy class for handling authorization of Purchase model actions.
+ */
 class PurchasePolicy
 {
     public function before(User $user): bool|null
@@ -16,14 +19,13 @@ class PurchasePolicy
     }
 
     /**
-     * Len admins a vinári vidíme všetky nákupy
+     * Determine whether the user can view any purchase entries.
      */
     public function viewAny(User $user): bool
     {
         if ($user->hasRole(['admin', 'winemaker'])) {
             return true;
         }
-        // Zákazníci vidíme len svoje nákupy
         return $user->hasPermissionTo('view purchase');
     }
 
@@ -32,7 +34,6 @@ class PurchasePolicy
         if ($user->hasRole('admin')) {
             return true;
         }
-        // Zákazník vidí len svoj nákup
         return $user->login === $purchase->user;
     }
 
@@ -41,9 +42,6 @@ class PurchasePolicy
         return $user->hasPermissionTo('create purchase');
     }
 
-    /**
-     * Len zákazník-vlastník alebo admin môžu editovať
-     */
     public function update(User $user, Purchase $purchase): bool
     {
         return $user->hasPermissionTo('edit purchase') &&

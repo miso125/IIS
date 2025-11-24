@@ -15,7 +15,7 @@ use App\Policies\PurchasePolicy;
 class AuthServiceProvider extends ServiceProvider
 {
     /**
-     * Mapovanie modelov na policies
+     * Map models to policies
      */
     protected $policies = [
         WineyardRow::class => WineyardRowPolicy::class,

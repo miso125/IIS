@@ -5,6 +5,9 @@ namespace App\Policies;
 use App\Models\User;
 use App\Models\WineyardRow;
 
+/**
+ * Policy class for handling authorization of WineyardRow model actions.
+ */
 class WineyardRowPolicy
 {
     public function before(User $user): bool|null
@@ -16,7 +19,7 @@ class WineyardRowPolicy
     }
 
     /**
-     * Každý môže vidieť vinohradové riadky
+     * Determine whether the user can view any wineyard entries.
      */
     public function viewAny(User $user): bool
     {
@@ -28,26 +31,17 @@ class WineyardRowPolicy
         return $user->hasRole('worker') || $user->hasPermissionTo('view winerow');
     }
 
-    /**
-     * Len vinári a pracovníci môžu vytvárať
-     */
     public function create(User $user): bool
     {
         return $user->hasPermissionTo('create winerow');
     }
 
-    /**
-     * Môže editovať len vinár-vlastník alebo admin
-     */
     public function update(User $user, WineyardRow $winerow): bool
     {
         return $user->hasPermissionTo('edit winerow') &&
-               $user->login === $winerow->user;  // Len vlastník
+               $user->login === $winerow->user;
     }
 
-    /**
-     * Len vlastník alebo admin môžu zmazať
-     */
     public function delete(User $user, WineyardRow $winerow): bool
     {
         if ($user->login !== $winerow->user) {

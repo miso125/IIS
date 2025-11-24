@@ -9,16 +9,15 @@ use Illuminate\Http\Request;
 class WineBatchController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the wines.
      */
     public function index()
     {
-        $this->authorize('viewAny', WineBatch::class); // Policy kontrola
+        $this->authorize('viewAny', WineBatch::class); // Policy control
 
-        // Načítame vína aj s informáciami o úrode a vinohrade (cez opravený názov harvestDetail)
         $wineBatches = WineBatch::with(['harvestDetail.wineyardrow'])->get();
 
-        // Ak je to zákazník, vyfiltrujeme len tie, čo sú na sklade (number_of_bottles > 0)
+        // Filter wines in stock
         if (auth()->user()->hasRole('customer')) {
             $wineBatches = $wineBatches->where('number_of_bottles', '>', 0);
         }
@@ -34,31 +33,34 @@ class WineBatchController extends Controller
         //
     }
 
+    /**
+     * Helper: Creates Wine Batch from Harvest
+     */
     public function createFromHarvest(Request $request, Harvest $harvest)
     {
-        // Kontrola: Len dokončenú sklizeň možno fľašovať
+        // Only completed
         if ($harvest->status !== 'completed') {
             return back()->with('error', 'Only completed harvests can be bottled.');
         }
 
-        // Automatický výpočet (napr. 1kg hrozna = 0.7 fľaše)
-        //$estimatedBottles = floor($harvest->weight_grapes * 0.7);
-
-        // Predvyplníme údaje, aby vinár nemusel písať všetko od nuly
+        // Pre fill data
         $prefill = [
             'vintage' => $harvest->date_time->format('Y'),
             'variety' => $harvest->variety,
             'sugariness' => $harvest->sugariness,
-            // Odhad: 1kg hrozna = cca 0.7 litra/fľaše (upravte podľa reality)
+            // CCA: 1kg hrozna = cca 0.7 litra/fľaše 
             'estimated_bottles' => floor($harvest->weight_grapes * 0.7),
         ];
 
         return view('wine_batches.create_from_harvest', compact('harvest', 'prefill'));
     }
 
+    /**
+     * Helper: Store Wine Batch created from Harvest
+     */
     public function storeFromHarvest(Request $request, Harvest $harvest)
     {
-        // Validácia vstupov od vinára
+        // Validation
         $validated = $request->validate([
             'vintage' => 'required|integer|min:1900',
             'variety' => 'required|string|max:100',
@@ -68,9 +70,9 @@ class WineBatchController extends Controller
             'price' => 'required|numeric|min:0',
         ]);
 
-        // Vytvorenie dávky vína
+        // Creation
         WineBatch::create([
-            'harvest' => $harvest->id_harvest, // Väzba na sklizeň
+            'harvest' => $harvest->id_harvest,
             'vintage' => $validated['vintage'],
             'variety' => $validated['variety'],
             'sugariness' => $validated['sugariness'],
@@ -80,7 +82,6 @@ class WineBatchController extends Controller
             'date_time' => now(),
         ]);
 
-        // Uzavretie sklizne (aby sa nedala fľašovať znova)
         $harvest->update(['status' => 'bottled']);
 
         return redirect()->route('wine_batches.index')
@@ -104,7 +105,7 @@ class WineBatchController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified wine.
      */
     public function edit(WineBatch $wine_batch)
     {
@@ -115,7 +116,7 @@ class WineBatchController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified wine in storage.
      */
     public function update(Request $request, WineBatch $wine_batch)
     {

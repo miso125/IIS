@@ -5,6 +5,9 @@ namespace App\Policies;
 use App\Models\User;
 use App\Models\WineBatch;
 
+/**
+ * Policy class for handling authorization of WInebatch model actions.
+ */
 class WineBatchPolicy
 {
     public function before(User $user): bool|null
@@ -16,7 +19,7 @@ class WineBatchPolicy
     }
 
     /**
-     * Všetci môžu vidieť dostupné vína
+     * Determine whether the user can view any winebatch entries.
      */
     public function viewAny(User $user): bool
     {
@@ -28,17 +31,11 @@ class WineBatchPolicy
         return $user->hasPermissionTo('view winebatch');
     }
 
-    /**
-     * Len vinári môžu vytvárať nové dávky vína
-     */
     public function create(User $user): bool
     {
         return $user->hasPermissionTo('create winebatch');
     }
 
-    /**
-     * Len vinár-vlastník sklizne môže editovať
-     */
     public function update(User $user, WineBatch $winebatch): bool
     {
         return $user->hasPermissionTo('edit winebatch') &&

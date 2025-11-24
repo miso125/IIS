@@ -5,6 +5,9 @@ namespace App\Policies;
 use App\Models\User;
 use App\Models\Treatment;
 
+/**
+ * Policy class for handling authorization of Treatment model actions.
+ */
 class TreatmentPolicy
 {
     public function before(User $user): bool|null
@@ -14,10 +17,11 @@ class TreatmentPolicy
         }
         return null;
     }
-
+    /**
+     * Determine whether the user can view any treatment entries.
+     */
     public function viewAny(User $user)
     {
-        // Use hasRole() instead of accessing $user->role directly
         return $user->hasRole('worker') || $user->hasRole('winemaker');
     }
 

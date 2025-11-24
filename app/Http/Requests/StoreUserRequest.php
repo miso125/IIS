@@ -17,8 +17,6 @@ class StoreUserRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -32,7 +30,9 @@ class StoreUserRequest extends FormRequest
             'role' => 'required|exists:roles,name',
         ];
     }
-    
+    /**
+     * Error messages
+     */
     public function messages(): array
     {
         return [
@@ -49,6 +49,9 @@ class StoreUserRequest extends FormRequest
         ];
     }
 
+    /**
+     * Prepares for validation
+     */
     protected function prepareForValidation(): void
     {
         $this->merge([

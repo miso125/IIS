@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * Class Harvest
+ *
+ * Represents a single harvest entry in the winery system.
+ *
+*/
 class Harvest extends Model
 {
     use HasFactory;
@@ -28,6 +34,9 @@ class Harvest extends Model
     protected $casts = [
         'date_time' => 'datetime', // Converts string to Carbon object
     ];
+    /**
+     * Definitions of relationships
+     */
 
     public function wineyardrow(): BelongsTo
     {

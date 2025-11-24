@@ -19,7 +19,9 @@ class PurchaseItem extends Model
         'stock',
         'item_price',
     ];
-
+    /**
+     * Definitions of relationships
+     */
     public function purchaseDetail(): BelongsTo
     {
         return $this->belongsTo(Purchase::class, 'purchase', 'id_purchase');

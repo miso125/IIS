@@ -13,6 +13,9 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller implements HasMiddleware
 {
+    /**
+     * Define authorization middleware for the controller.
+     */
     public static function middleware(): array
     {
         return [        
@@ -35,7 +38,7 @@ class UserController extends Controller implements HasMiddleware
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new user.
      */
     public function create()
     {
@@ -46,7 +49,7 @@ class UserController extends Controller implements HasMiddleware
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created user in storage.
      */
     public function store(StoreUserRequest $request)
     {
@@ -59,14 +62,14 @@ class UserController extends Controller implements HasMiddleware
             'name' => $validated['name'],
             'last_name' => $validated['last_name'],
             'email' => $validated['email'],
-            'password_hash' => Hash::make($validated['password']), // Hashovanie hesla
-            'is_active' => $request->has('is_active'), // Checkbox vracia true/false
-            'address' => 'N/A', // Predvolená hodnota, ak nemáte pole v formulári
+            'password_hash' => Hash::make($validated['password']), // Password hash
+            'is_active' => $request->has('is_active'), 
+            'address' => 'N/A',
             'date_of_registration' => now(),
             'role' => $validated['role'],
         ]);
 
-        // 4. Priradenie roly
+        // Role assignment
         $user->assignRole($validated['role']);
 
         return redirect()->route('users.index')
@@ -74,7 +77,7 @@ class UserController extends Controller implements HasMiddleware
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified user.
      */
     public function show(User $user)
     {
@@ -84,7 +87,7 @@ class UserController extends Controller implements HasMiddleware
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified user.
      */
     public function edit(User $user)
     {
@@ -94,7 +97,7 @@ class UserController extends Controller implements HasMiddleware
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified user in storage.
      */
     public function update(UpdateUserRequest $request, User $user)
     {
@@ -117,7 +120,6 @@ class UserController extends Controller implements HasMiddleware
             }
         }
 
-
         // Update basic details
         $user->update([
             'name' => $validated['name'],
@@ -133,7 +135,7 @@ class UserController extends Controller implements HasMiddleware
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified user from storage.
      */
     public function destroy(User $user)
     {
