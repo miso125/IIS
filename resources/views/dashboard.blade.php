@@ -94,9 +94,6 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <a href="{{ route('users.show', $user) }}" class="btn btn-sm btn-info">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
                                             <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-warning">
                                                 <i class="fas fa-edit"></i>
                                             </a>

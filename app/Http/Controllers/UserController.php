@@ -108,6 +108,7 @@ class UserController extends Controller implements HasMiddleware
             'last_name' => 'required|string|max:100',
             'email' => 'required|email|max:255|unique:user,email,' . $user->login . ',login',
             'role' => 'required|exists:roles,name', // Validate role exists
+            'is_active' => 'boolean'
         ]);
 
         if (auth()->user()->login === $user->login) {
@@ -125,6 +126,7 @@ class UserController extends Controller implements HasMiddleware
             'name' => $validated['name'],
             'last_name' => $validated['last_name'],
             'email' => $validated['email'],
+            'is_active' => $validated['is_active'],
         ]);
 
         // Sync the role (Spatie)

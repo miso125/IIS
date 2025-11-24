@@ -59,10 +59,10 @@
                         </div>
 
                         <div class="mb-3 form-check">
-                            <input type="hidden" name="isActive" value="0">
-                            <input type="checkbox" class="form-check-input" id="isActive" name="isActive" value="1" 
+                            <input type="hidden" name="is_active" value="0">
+                            <input type="checkbox" class="form-check-input" id="is_active" name="is_active" value="1" 
                                    {{ $user->is_active ? 'checked' : '' }}>
-                            <label class="form-check-label" for="isActive">Active Account</label>
+                            <label class="form-check-label" for="is_active">Active Account</label>
                         </div>
 
                         <div class="d-flex justify-content-between align-items-center mt-4">

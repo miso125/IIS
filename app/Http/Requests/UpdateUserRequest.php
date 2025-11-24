@@ -48,7 +48,7 @@ class UpdateUserRequest extends FormRequest
                 'sometimes',
                 'exists:roles,name',
             ],
-            'isActive' => [
+            'is_active' => [
                 'boolean',
             ],
         ];
