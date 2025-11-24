@@ -42,24 +42,49 @@ class WineBatchController extends Controller
         }
 
         // Automatický výpočet (napr. 1kg hrozna = 0.7 fľaše)
-        $estimatedBottles = floor($harvest->weight_grapes * 0.7);
+        //$estimatedBottles = floor($harvest->weight_grapes * 0.7);
 
-        // Vytvorenie Šarže
-        WineBatch::create([
-            'harvest' => $harvest->id_harvest,
-            'vintage' => $harvest->date_time->format('Y'), // Ročník podľa dátumu sklizne
-            'variety' => $harvest->variety, // Odroda zo sklizne
+        // Predvyplníme údaje, aby vinár nemusel písať všetko od nuly
+        $prefill = [
+            'vintage' => $harvest->date_time->format('Y'),
+            'variety' => $harvest->variety,
             'sugariness' => $harvest->sugariness,
-            'alcohol_percentage' => 12.5, // Predvolené alebo doplňte input
-            'number_of_bottles' => $estimatedBottles,
-            'date_time' => now(),
-            'price' => 10.00, // Predvolená cena
+            // Odhad: 1kg hrozna = cca 0.7 litra/fľaše (upravte podľa reality)
+            'estimated_bottles' => floor($harvest->weight_grapes * 0.7),
+        ];
+
+        return view('wine_batches.create_from_harvest', compact('harvest', 'prefill'));
+    }
+
+    public function storeFromHarvest(Request $request, Harvest $harvest)
+    {
+        // Validácia vstupov od vinára
+        $validated = $request->validate([
+            'vintage' => 'required|integer|min:1900',
+            'variety' => 'required|string|max:100',
+            'sugariness' => 'required|integer|min:0',
+            'alcohol_percentage' => 'required|numeric|min:0|max:20',
+            'number_of_bottles' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
         ]);
 
-        // Označíme sklizeň ako 'bottled', aby sme ju nefľašovali dvakrát
+        // Vytvorenie dávky vína
+        WineBatch::create([
+            'harvest' => $harvest->id_harvest, // Väzba na sklizeň
+            'vintage' => $validated['vintage'],
+            'variety' => $validated['variety'],
+            'sugariness' => $validated['sugariness'],
+            'alcohol_percentage' => $validated['alcohol_percentage'],
+            'number_of_bottles' => $validated['number_of_bottles'],
+            'price' => $validated['price'],
+            'date_time' => now(),
+        ]);
+
+        // Uzavretie sklizne (aby sa nedala fľašovať znova)
         $harvest->update(['status' => 'bottled']);
 
-        return back()->with('success', 'Wine Batch created successfully! Ready for sale.');
+        return redirect()->route('wine_batches.index')
+            ->with('success', 'New wine batch created successfully!');
     }
 
     /**

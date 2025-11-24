@@ -85,8 +85,12 @@ Route::middleware('auth')->group(function () {
         Route::resource('harvests', HarvestController::class);
         Route::resource('treatments', TreatmentController::class);
         Route::resource('wine_batches', WineBatchController::class)->except(['index','show']);
-        Route::post('/harvests/{harvest}/bottle', [WineBatchController::class, 'createFromHarvest'])
-             ->name('harvests.bottle');
+        Route::get('/harvests/{harvest}/bottle', [WineBatchController::class, 'createFromHarvest'])
+            ->name('harvests.bottle.create');
+
+        // 2. Uloženie novej dávky vína
+        Route::post('/harvests/{harvest}/bottle', [WineBatchController::class, 'storeFromHarvest'])
+            ->name('harvests.bottle.store');
     });
 
     // ============================================

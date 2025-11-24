@@ -232,13 +232,11 @@
                                         <td>{{ $harvest->weight_grapes }} kg</td>
                                         <td>{{ $harvest->sugariness }} °NM</td>
                                         <td>
-                                            {{-- Tlačidlo vytvorí WineBatch --}}
-                                            <form action="{{ route('harvests.bottle', $harvest) }}" method="POST">
-                                                @csrf
-                                                <button type="submit" class="btn btn-primary btn-sm">
+                                            <td>
+                                                <a href="{{ route('harvests.bottle.create', $harvest) }}" class="btn btn-primary btn-sm">
                                                     <i class="fas fa-wine-bottle"></i> Bottle This
-                                                </button>
-                                            </form>
+                                                </a>
+                                            </td>
                                         </td>
                                     </tr>
                                 @empty
