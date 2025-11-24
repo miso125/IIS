@@ -18,7 +18,7 @@ class UserSeeder extends Seeder
             [
                 'login' => 'vinar1',
                 'password_hash' => Hash::make('heslo123'),
-                'email' => '[email protected]',
+                'email' => 'vinic@mail.com',
                 'name' => 'Andrej',
                 'last_name' => 'Vinič',
                 'address' => 'Vinohradnícka 5, Modra',
@@ -29,7 +29,7 @@ class UserSeeder extends Seeder
             [
                 'login' => 'pracovnik1',
                 'password_hash' => Hash::make('heslo123'),
-                'email' => '[email protected]',
+                'email' => 'robotnik@mail.com',
                 'name' => 'Jozef',
                 'last_name' => 'Robotník',
                 'address' => 'Hlavná 12, Pezinok',
@@ -40,7 +40,7 @@ class UserSeeder extends Seeder
             [
                 'login' => 'zakaznik1',
                 'password_hash' => Hash::make('heslo123'),
-                'email' => '[email protected]',
+                'email' => 'kupil@mail.com',
                 'name' => 'Peter',
                 'last_name' => 'Kúpil',
                 'address' => 'Nová 8, Bratislava',
@@ -51,7 +51,7 @@ class UserSeeder extends Seeder
             [
                 'login' => 'zakaznik2',
                 'password_hash' => Hash::make('heslo123'),
-                'email' => '[email protected]',
+                'email' => 'novakova@mail.com',
                 'name' => 'Mária',
                 'last_name' => 'Nováková',
                 'address' => 'Slnečná 15, Trnava',
