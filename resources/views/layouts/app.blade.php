@@ -110,9 +110,6 @@
                                 <i class="fas fa-user-circle"></i> {{ auth()->user()->name }}
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-cog"></i> Settings</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
                                     <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                                         @csrf
                                         <button type="submit" class="dropdown-item">

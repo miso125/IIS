@@ -168,17 +168,6 @@
             Don't have an account? <a href="{{ route('register') }}">Register here</a>
         </div>
 
-        <!-- Demo Credentials -->
-        <div class="alert alert-info mt-4" style="font-size: 12px;">
-            <strong>Demo Credentials:</strong><br>
-            <small>
-                <i class="fas fa-user-tie"></i> Admin: <code>admin</code> / <code>admin123</code><br>
-                <i class="fas fa-leaf"></i> Vinar: <code>vinar1</code> / <code>heslo123</code><br>
-                <i class="fas fa-hammer"></i> Worker: <code>pracovnik1</code> / <code>heslo123</code><br>
-                <i class="fas fa-user"></i> Customer: <code>zakaznik1</code> / <code>heslo123</code><br>
-                <i class="fas fa-user"></i> Customer: <code>zakaznik2</code> / <code>heslo123</code>
-            </small>
-        </div>
     </div>
 
     <!-- Bootstrap JS -->

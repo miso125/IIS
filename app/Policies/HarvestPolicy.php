@@ -50,7 +50,7 @@ class HarvestPolicy
 
     public function delete(User $user, Harvest $harvest): bool
     {
-        if ($user->hasRole('worker') && $user->login === $harvest->user) {
+        if (($user->hasRole('worker') || $user->hasRole('winemaker'))) {
             return true;
         }
 
