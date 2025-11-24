@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id_treatment');
             $table->foreignId('wine_row')->constrained('wineyardrow', 'id_row')->onDelete('cascade');
             $table->string('user');
-            $table->foreign('user')->references('login')->on('user')->onDelete('restrict');
+            $table->foreign('user')->references('login')->on('user')->onDelete('cascade');
             $table->dateTime('date_time');
             $table->string('type');
             $table->string('treatment_product')->nullable();

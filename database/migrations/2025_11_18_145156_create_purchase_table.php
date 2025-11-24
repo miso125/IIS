@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('purchase', function (Blueprint $table) {
             $table->id('id_purchase');
             $table->string('user');
-            $table->foreign('user')->references('login')->on('user')->onDelete('restrict');
+            $table->foreign('user')->references('login')->on('user')->onDelete('cascade');
             $table->dateTime('date_time');
             $table->float('total_price');
             $table->timestamps();

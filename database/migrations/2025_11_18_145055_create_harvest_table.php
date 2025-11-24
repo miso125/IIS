@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id_harvest');
             $table->foreignId('wine_row')->constrained('wineyardrow', 'id_row')->onDelete('cascade');
             $table->string('user')->nullable();
-            $table->foreign('user')->references('login')->on('user')->onDelete('restrict');
+            $table->foreign('user')->references('login')->on('user')->onDelete('cascade');
             $table->integer('weight_grapes')->nullable();
             $table->string('variety')->nullable();
             $table->integer('sugariness')->nullable();

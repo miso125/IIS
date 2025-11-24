@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('wineyardrow', function (Blueprint $table) {
             $table->id('id_row');
             $table->string('user');
-            $table->foreign('user')->references('login')->on('user')->onDelete('restrict');
+            $table->foreign('user')->references('login')->on('user')->onDelete('cascade');
             $table->string('variety');
             $table->integer('number_of_vines');
             $table->integer('planting_year');
