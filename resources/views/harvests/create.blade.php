@@ -165,6 +165,7 @@
                     enableTime: true,
                     dateFormat: "d.m.Y H:i",
                     defaultDate: "{{ old('date_time', now()->format('d.m.Y H:i')) }}",
+                    minDate: 'today',
                     onChange: runCheck
                 });
 
