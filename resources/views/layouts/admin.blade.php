@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vinařství Andrej - Systém</title>
+    <title>Winery Andrej</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
@@ -16,21 +16,21 @@
     <div class="flex h-screen overflow-hidden">
         <aside class="w-64 bg-[#722F37] text-white flex flex-col shadow-2xl">
             <div class="p-6 text-center border-b border-white/10">
-                <h1 class="text-2xl font-bold serif tracking-wide">Vinařství<br>Andrej</h1>
+                <h1 class="text-2xl font-bold serif tracking-wide">Winery<br>Andrej</h1>
             </div>
             
             <nav class="flex-1 py-6 space-y-1">
                 <a href="#" class="flex items-center px-6 py-3 bg-white/10 border-r-4 border-[#4A5D23]">
-                    <span class="font-medium">Prehľad Vinice</span>
+                    <span class="font-medium">Vineyard Overview</span>
                 </a>
                 <a href="#" class="flex items-center px-6 py-3 hover:bg-white/5 transition">
-                    <span class="font-medium opacity-80">Plánovanie Ošetrení</span>
+                    <span class="font-medium opacity-80">Treatment Planning</span>
                 </a>
                 <a href="#" class="flex items-center px-6 py-3 hover:bg-white/5 transition">
-                    <span class="font-medium opacity-80">Sklad & Sklizeň</span>
+                    <span class="font-medium opacity-80">Storage & Harvest</span>
                 </a>
                 <a href="#" class="flex items-center px-6 py-3 hover:bg-white/5 transition">
-                    <span class="font-medium opacity-80">Objednávky</span>
+                    <span class="font-medium opacity-80">Orders</span>
                 </a>
             </nav>
 
@@ -39,7 +39,7 @@
                     <div class="w-8 h-8 rounded-full bg-gray-300"></div>
                     <div>
                         <p class="text-sm font-bold">Andrej</p>
-                        <p class="text-xs opacity-70">Administrátor</p>
+                        <p class="text-xs opacity-70">Administrator</p>
                     </div>
                 </div>
             </div>

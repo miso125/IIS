@@ -22,14 +22,14 @@
             </span>
             <span class="flex items-center gap-1">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                Archívne
+                Archive
             </span>
         </div>
 
         <form action="{{ route('cart.add', $wine) }}" method="POST">
             @csrf
             <button class="w-full bg-[#722F37] hover:bg-[#5a242b] text-white font-medium py-2 rounded transition-colors flex justify-center items-center gap-2">
-                Do košíka
+                Add to cart
             </button>
         </form>
     </div>

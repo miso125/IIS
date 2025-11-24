@@ -13,6 +13,7 @@ use App\Models\WineBatch;
 use Illuminate\Support\Facades\Route;
 use App\Models\User;
 
+// Welcome page
 Route::get('/', function () {
     $wines = WineBatch::with('harvestDetail.wineyardrow')
                 ->where('number_of_bottles', '>', 0)
@@ -25,29 +26,8 @@ Route::get('/', function () {
 })->name('home');
 
 
-/* 
-Route::middleware('auth')->group(function () {
-
-    // Treatments: vinar can view index/show, worker can do all
-    Route::get('/treatments', [TreatmentController::class, 'index'])->middleware('role:winemaker|worker')->name('treatments.index');
-    Route::get('/treatments/{treatment}', [TreatmentController::class, 'show'])->middleware('role:winemaker|worker')->name('treatments.show');
-
-    // Worker-only routes
-    Route::middleware('role:worker')->group(function () {
-        Route::get('/treatments/create', [TreatmentController::class, 'create'])->name('treatments.create');
-        Route::post('/treatments', [TreatmentController::class, 'store'])->name('treatments.store');
-        Route::get('/treatments/{treatment}/edit', [TreatmentController::class, 'edit'])->name('treatments.edit');
-        Route::put('/treatments/{treatment}', [TreatmentController::class, 'update'])->name('treatments.update');
-        Route::delete('/treatments/{treatment}', [TreatmentController::class, 'destroy'])->name('treatments.destroy');
-    });
-
-});
-
- */
-
-
 // ============================================
-// Autentifikácia (Login, Logout, Register)
+// Autentificationa (Login, Logout, Register)
 // ============================================
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
@@ -56,7 +36,7 @@ Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('regi
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
 // ============================================
-// Autorizované routes – Len pre prihlásených
+// Autorized roles
 // ============================================
 Route::middleware('auth')->group(function () {
     
@@ -78,7 +58,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // ============================================
-    // Vinar Routes
+    // Winemaker Routes
     // ============================================
     Route::middleware('role:winemaker')->group(function () {
         Route::resource('vineyards', WineyardRowController::class);
@@ -87,8 +67,6 @@ Route::middleware('auth')->group(function () {
         Route::resource('wine_batches', WineBatchController::class)->except(['index','show']);
         Route::get('/harvests/{harvest}/bottle', [WineBatchController::class, 'createFromHarvest'])
             ->name('harvests.bottle.create');
-
-        // 2. Uloženie novej dávky vína
         Route::post('/harvests/{harvest}/bottle', [WineBatchController::class, 'storeFromHarvest'])
             ->name('harvests.bottle.store');
     });
@@ -135,7 +113,5 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         return view('admin.reports');
     })->name('admin.reports');
 });
-
-
 
 Route::post('/harvests/check-date', [HarvestController::class, 'checkDate']);
