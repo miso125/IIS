@@ -17,7 +17,7 @@ class AdminSeeder extends Seeder
         User::create([
             'login' => 'admin',
             'password_hash' => Hash::make('admin123'),
-            'email' => '[email protected]',
+            'email' => 'admin@mail.com',
             'name' => 'Hlavný',
             'last_name' => 'Administrátor',
             'address' => 'Vinárstvo 1, Bratislava',
