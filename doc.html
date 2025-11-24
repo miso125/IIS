@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=iso-8859-2"/>
+    <title>Projekt IIS</title>
+    <style type="text/css">
+      table { border-collapse: collapse; }
+      td, th { border: 1px solid black; padding: 0.3em 0.5em; text-align: left; }
+      dt { font-weight: bold; margin-top: 0.5em; }
+    </style>
+  </head>
+  <body>
+
+    <!-- Zkontrolujte prosím nastavení kódování v hlavičce dokumentu 
+	 podle použitého editoru -->
+
+    <h1>Vinařství</h1> <!-- Nahradte názvem svého zadání -->
+
+    <dl>
+      <dt>Autoři</dt>
+      <dd>Andrej Mikuš <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	<a href="mailto:xmikus19@stud.fit.vutbr.cz">xmikus19@stud.fit.vutbr.cz</a>
+	<ul>
+	  <li>Vedenie tímu</li>
+	  <li>Implementácia formulárov pre sklizeň a ošetrenia</li>
+	  <li>Implementácia obmedzení pre dáta a užívateľov IS</li>
+	</ul>
+      </dd>
+      <dd>Michal Senderák <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	<a href="mailto:xsendem00@stud.fit.vutbr.cz">xsendem00@stud.fit.vutbr.cz</a>
+	<ul>
+	  <li>Vytvorenie modelu, databázy</li>
+	  <li>Implementácia kostry pre webstránku</li>
+	  <li>Implementácia funkcionality pre nákup vín</li>
+	</ul>
+      </dd>
+      <dd>Matěj Lepeška <!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
+	<a href="mailto:xlepes00@stud.fit.vutbr.cz">xlepes00@stud.fit.vutbr.cz</a>
+	<ul>
+	  <li>Implementácia správy uživateľov</li>
+	  <li>Deploy na hosting</li>
+	  <li>Návrh frontendu</li>
+	</ul>
+      </dd>
+      <dt>URL aplikace</dt>
+      <dd><a href="https://www.stud.fit.vutbr.cz/~xmikus19/IIS/">https://www.stud.fit.vutbr.cz/~xmikus19/IIS/</a></dd>
+      <dd>resp.</dd>
+      <dd><a href="https://www.stud.fit.vutbr.cz/~xmikus19/">https://www.stud.fit.vutbr.cz/~xmikus19/</a></dd>
+      <dd>Ak nepôjde, tak:</dd>
+      <dd><a href="https://iisss-production.up.railway.app/">https://iisss-production.up.railway.app/</a></dd>
+    </dl>
+
+    <h2>Uživatelé systému pro testování</h2>
+    <table>
+      <tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
+      <tr><td>admin</td><td>admin123</td><td>Administrátor</td></tr>
+      <tr><td>vinar1</td><td>heslo123</td><td>Vinár -- manažér</td></tr>
+      <tr><td>pracovnik1</td><td>heslo123</td><td>Vinár -- robotník</td></tr>
+      <tr><td>zakaznik1</td><td>heslo123</td><td>Registrovaný zákazník</td></tr>
+      <tr><td>zakaznik2</td><td>heslo123</td><td>Neregistrovaný zákazník (návštevník)</td></tr>
+    </table>
+
+    <h3>Video</h3>
+    <p>
+      <a href="https://drive.google.com/drive/folders/1fbovPa1pmKLA3LUbHDiflRZiLKqowcZh?usp=sharing">Odkaz na video</a>
+    </p>
+
+    <h2>Implementace</h2>
+    <p>
+      Informačný systém je implementovaný ako webová aplikácia v jazyku <strong>PHP (verzia 8.4)</strong> s využitím frameworku <strong>Laravel</strong>. 
+      Architektúra systému vychádza z návrhového vzoru <strong>MVC</strong>. 
+      Dáta sú ukladané v relačnej databáze MySQL. Frontend využíva šablónovací systém <strong>Blade</strong> a CSS framework <strong>Bootstrap</strong>. Na implementáciu datepickeru sme použili AJAX JavaScript.
+    </p>
+
+    <h3>Prípady použitia na skripty</h3>
+    <p>Jednotlivé funkčné celky a prípady použitia sú implementované v nasledujúcich kontroleroch a modeloch:</p>
+
+    <ul>
+      <li>
+        <strong>Autentifikácia a autorizácia:</strong>
+        Registrácia, prihlásenie a odhlásenie užívateľov sú riešené v <code>app/Http/Controllers/AuthController.php</code>. 
+        Riadenie prístupových práv (Roles/Permissions) je zabezpečené pomocou middleware a policies (<code>app/Policies/</code>).
+      </li>
+      <li>
+        <strong>Správa užívateľov (Admin):</strong>
+        CRUD operácie nad užívateľmi, prideľovanie rolí a správa účtov sú implementované v <code>app/Http/Controllers/UserController.php</code>.
+      </li>
+      <li>
+        <strong>Správa vinohradov:</strong>
+        Evidencia riadkov vinohradu, odrôd a ich vlastností je v <code>app/Http/Controllers/WineyardRowController.php</code>.
+      </li>
+      <li>
+        <strong>Zber úrody (Harvests):</strong>
+        Zadávanie a správa zberov, kontrola cukornatosti a dátumov zberu sú obsluhované v <code>app/Http/Controllers/HarvestController.php</code>.
+      </li>
+      <li>
+        <strong>Ošetrovanie a postreky:</strong>
+        Plánovanie a evidencia vykonaných ošetrení vo vinohrade je riešená v <code>app/Http/Controllers/TreatmentController.php</code>.
+      </li>
+      <li>
+        <strong>Výroba vína (Šarže):</strong>
+        Proces fľašovania (vytvorenie vínnej šarže z dokončeného zberu) a evidencia skladových zásob je implementovaná v <code>app/Http/Controllers/WineBatchController.php</code>.
+      </li>
+      <li>
+        <strong>Predaj a objednávky (E-shop):</strong>
+        Zákaznícka sekcia pre nákup vína a prezeranie histórie objednávok je spravovaná v <code>app/Http/Controllers/PurchaseController.php</code>.
+      </li>
+      <li>
+        <strong>Dashboard a prehľady:</strong>
+        Zobrazovanie súhrnných informácií pre rôzne role (Admin, Vinár, Zákazník) zabezpečuje <code>app/Http/Controllers/DashboardController.php</code>.
+      </li>
+    </ul>
+
+    <h3>Štruktúra pohľadov (Views)</h3>
+    <p>Užívateľské rozhranie je rozdelené do adresárov v <code>resources/views/</code> podľa funkčných modulov (napr. <code>harvests/</code>, <code>wine_batches/</code>, <code>users/</code>). Hlavný layout aplikácie je definovaný v <code>resources/views/layouts/app.blade.php</code>.</p>
+  </p>
+  <h3>Databáze</h3>
+
+  <img src="schema.png" alt="Schéma relační databáze" style="max-width:100%; height:auto;">
+
+    <h2>Instalace</h2>
+
+    Postup instalace na server:
+    <ul>
+      <li>composer install</li>
+      <li>touch .env</li>
+      <li>cp .env.example .env</li>
+      <li>php artisan key:generate</li>
+      <li>vložiť kľúč do premennej APP_KEY v súbore .env</li>
+      <li>npm install</li>
+      <li>npm run dev         # pre vývoj</li>
+      <li>npm run build       # pre produkciu</li>
+
+    </ul>
+    Softwarové požadavky:
+    <ul>
+      <li>PHP verzia 8.4</li>
+      <li>sqlite3 3.45.1</li>
+    </ul>
+    Jak rozbalit, konfigurovat, inicializovat databázi:
+    <ul>
+      <li>touch database/database.sqlite</li>
+      <li>php artisan migrate --seed</li>
+      <li>php artisan serve</li>
+      <li>localhost:8000/</li>
+    </ul>
+
+    <h2>Známé problémy</h2>
+    <ul>
+      <li>Neboli sme rozhodnutí ako implementovať plánované dátumy oproti skutočným dátumom vykonaných činností vo vinohrade. Z tohto dôvodu sme ponechali iba plánované dátumy.</li>
+      <li>Nevedeli sme ako spustiť MySQL na localhoste. Preto sme lokálne používali SQLite, hoci si uvedomujeme, že to nebolo dovolené. Hosting už ale používa MySQL databázu.</li>
+    </ul>
+
+  </body>
+</html>
