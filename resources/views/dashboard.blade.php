@@ -324,7 +324,7 @@
                         @forelse($plannedHarvests ?? [] as $harvest)
                             <tr>
                                 <td>{{ $harvest->date_time->format('d.m.Y') }}</td>
-                                <td>{{ $harvest->wineyardrow->variety ?? 'Unknown' }}</td>
+                                <td>{{ $harvest->variety ?? 'Unknown' }}</td>
                                 <td>
                                     <a href="{{ route('harvests.edit', $harvest) }}" class="btn btn-success btn-sm">
                                         <i class="fas fa-check"></i> Complete
