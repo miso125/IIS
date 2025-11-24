@@ -56,7 +56,7 @@ class HarvestController extends Controller implements HasMiddleware
         $validated = $request->validate([
             'wine_row' => 'required|exists:wineyardrow,id_row',
             'date_time' => 'required|string',
-            'variety'   => 'required|string|max:100',
+            // 'variety'   => 'required|string|max:100',
         ]);
 
         $dateTime = Carbon::createFromFormat('d.m.Y H:i', $validated['date_time']);
@@ -82,6 +82,11 @@ class HarvestController extends Controller implements HasMiddleware
             }
         }
 
+        $selectedRow = WineyardRow::find($validated['wine_row']);
+
+        $variety = $selectedRow ? $selectedRow->variety : null;
+
+
 
         Harvest::create([
             'wine_row' => $validated['wine_row'],
@@ -90,7 +95,7 @@ class HarvestController extends Controller implements HasMiddleware
             'user' => null,
             'weight_grapes' => null,
             'sugariness' => null,
-            'variety' => $validated['variety'],
+            'variety' => $variety,
         ]);
 
         return redirect()->route('harvests.index')
@@ -120,9 +125,11 @@ class HarvestController extends Controller implements HasMiddleware
     {
         // Tu už vyžadujeme výsledky práce
         $rules = [
-            'weight_grapes' => 'required|integer|min:1',
-            'sugariness'    => 'required|integer|min:10|max:35',
-            'variety'       => 'required|string|max:100',
+            'weight_grapes' => '',
+            'sugariness'    => '',
+            'date_time'     => '',
+            'wine_row'      => '',
+           // 'variety'       => 'required|string|max:100',
             'notes'         => 'nullable|string',
         ];
 
@@ -130,8 +137,12 @@ class HarvestController extends Controller implements HasMiddleware
             $rules['date_time'] = 'required|string';
             $rules['wine_row']  = 'required|exists:wineyardrow,id_row';
         }
+        if (auth()->user()->hasRole('worker')) {
+            $rules['weight_grapes'] = 'required|integer|min:1';
+            $rules['sugariness']    = 'required|integer|min:10|max:35';
+        }
 
-        
+
         $validated = $request->validate($rules);
 
         if (auth()->user()->hasRole('winemaker')) {
@@ -157,11 +168,15 @@ class HarvestController extends Controller implements HasMiddleware
             }
         }
 
+        $selectedRow = WineyardRow::find($validated['wine_row']);
+
+        $variety = $selectedRow ? $selectedRow->variety : null;
+
         // Aktualizácia záznamu
         $harvest->update([
             'weight_grapes' => $validated['weight_grapes'],
             'sugariness' => $validated['sugariness'],
-            'variety' => $validated['variety'],
+            'variety' => $variety,
             'notes' => $request->notes,
             
             // Dôležité zmeny stavu:

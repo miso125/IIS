@@ -27,7 +27,7 @@
                     @foreach ($wineyardrows as $row)
                         <option value="{{ $row->id_row }}"
                             {{ old('wine_row') == $row->id_row ? 'selected' : '' }}>
-                            {{ $row->id_row }}
+                            {{ $row->id_row}}:  {{$row->variety}}
                         </option>
                     @endforeach
                 </select>
@@ -141,16 +141,10 @@
                     @foreach ($wineyardrows as $row)
                         <option value="{{ $row->id_row }}"
                             {{ old('wine_row') == $row->id_row ? 'selected' : '' }}>
-                            {{ $row->id_row }}
+                            {{ $row->id_row}}:  {{$row->variety}}
                         </option>
                     @endforeach
                 </select>
-            </div>
-
-            <div class="mb-3">
-                <label for="variety" class="form-label">Variety</label>
-                <input type="text" class="form-control" id="variety"
-                       name="variety" value="{{ old('variety') }}" required>
             </div>
 
             <div class="mb-3">

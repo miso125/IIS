@@ -33,20 +33,13 @@
         </div>
 
         <div class="mb-3">
-            <label for="variety" class="form-label">Variety</label>
-            <input type="text" class="form-control" id="variety" name="variety" value="{{ old('variety', $harvest->variety) }}" 
-                @role('worker') readonly style="pointer-events: none; background-color: #f2f2f2; color: #888;" @endrole
-            >
-        </div>
-
-        <div class="mb-3">
             <label for="weight_grapes" class="form-label">Weight of Grapes (kg)</label>
-            <input type="number" step="0.01" class="form-control" id="weight_grapes" name="weight_grapes" value="{{ old('weight_grapes', $harvest->weight_grapes) }}" required>
+            <input type="number" step="0.01" class="form-control" id="weight_grapes" name="weight_grapes" value="{{ old('weight_grapes', $harvest->weight_grapes) }}" @role('worker') required @endrole>
         </div>
 
         <div class="mb-3">
             <label for="sugariness" class="form-label">Sugariness (°NM)</label>
-            <input type="number" step="0.1" class="form-control" id="sugariness" name="sugariness" value="{{ old('sugariness', $harvest->sugariness) }}" required>
+            <input type="number" step="0.1" class="form-control" id="sugariness" name="sugariness" value="{{ old('sugariness', $harvest->sugariness) }}" @role('worker') required @endrole>
         </div>
 
         <div class="mb-3">

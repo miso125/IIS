@@ -124,6 +124,11 @@ class TreatmentController extends Controller
             $validatedData['planned_date'] = null;
         }
 
+        $selectedRow = WineyardRow::find($validatedData['wine_row']);
+
+        $validatedData['variety'] = $selectedRow ? $selectedRow->variety : null;
+
+
         $validatedData['is_completed'] = $request->boolean('is_completed');
 
         $treatment->update($validatedData);

@@ -14,7 +14,7 @@
                 <option value="" disabled {{ old('wine_row') ? '' : 'selected' }}>Select a wine row</option>
                 @foreach($wineRows as $row)
                     <option value="{{ $row->id_row }}" {{ old('wine_row') == $row->id_row ? 'selected' : '' }}>
-                        {{ $row->id_row }}
+                        {{ $row->id_row}}:  {{$row->variety}}
                     </option>
                 @endforeach
             </select>

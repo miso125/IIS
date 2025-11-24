@@ -21,6 +21,7 @@
                     <th>ID</th>
                     <th>Type</th>
                     <th>Wine Row</th>
+                    <th>Variety</th>
                     <th>Planned Date</th>
                     <th>Status</th>
                     <th>Actions</th>
@@ -44,6 +45,7 @@
                         </td>
 
                         <td>{{ $treatment->wine_row }}</td>
+                        <td>{{ $treatment->winerow->variety ?? '' }}</td>
 
                         <td>
                             {{ $treatment->planned_date

@@ -11,8 +11,12 @@
             <div class="form-group mb-3">
                 <label class="form-label">Wine Row:</label>
                 <div class="form-control-plaintext border rounded px-2 py-1 bg-light">
-                    {{ $treatment->wine_row }}
+                    {{ $treatment->wine_row }}: {{ $treatment->winerow->variety ?? '' }}
                 </div>
+
+                <input type="hidden" name="wine_row" value="{{ $treatment->wine_row }}">
+
+
             </div>
 
 

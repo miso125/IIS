@@ -20,6 +20,10 @@ class WineyardRow extends Model
         'colour',
     ];
 
+    protected $casts = [
+        'wine_row' => 'winerow',
+    ];
+
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user', 'login');
