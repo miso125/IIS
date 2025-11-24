@@ -13,7 +13,7 @@
 <!-- Zkontrolujte prosím nastavení kódování v hlavièce dokumentu 
      podle pou¾itého editoru -->
 
-<h1>Název zadání (editujte)</h1> <!-- Nahradte názvem svého zadání -->
+<h1>Vinárstvo Andrej</h1> <!-- Nahradte názvem svého zadání -->
 
 <dl>
 	<dt>Autoøi</dt>
@@ -30,7 +30,7 @@
 		popis èinnosti v týmu
 	</dd>
 	<dt>URL aplikace</dt>
-	<dd><a href="http://www.stud.fit.vutbr.cz/~xautor01/IIS">http://www.stud.fit.vutbr.cz/~xautor01/IIS</a></dd>
+	<dd><a href="https://iisss-production.up.railway.app">https://iisss-production.up.railway.app</a></dd>
 	<dd>(pokud má aplikace více vstupních stránek, napi¹te obdobnì dal¹í URL)</dd>
 </dl>
 
@@ -38,9 +38,10 @@
 <p>Uveïte prosím existující zástupce <strong>v¹ech rolí u¾ivatelù</strong>.</p>
 <table>
 <tbody><tr><th>Login</th><th>Heslo</th><th>Role</th></tr>
-<tr><td>admin</td><td>admin</td><td>Administrátor</td></tr>
-<tr><td>prodavac</td><td>prodavac</td><td>Prodavaè</td></tr>
-<tr><td>franta</td><td>franta</td><td>Zákazník</td></tr>
+<tr><td>admin</td><td>admin123</td><td>Administrátor</td></tr>
+<tr><td>vinar1</td><td>heslo123</td><td>Vinár</td></tr>
+<tr><td>pracovnik1</td><td>heslo123</td><td>Pracovník</td></tr>
+<tr><td>zakaznik1</td><td>heslo123</td><td>Zákazník</td></tr>
 </tbody></table>
 
 <p>(Diagram pøípadù u¾ití není nutné vkládat, pokud IS implementuje role a pøípady u¾ití definované zadáním.)</p> 
@@ -60,14 +61,22 @@ projektu (napø. PHP skripty) implementují jednotlivé pøípady pou¾ití.</p>
 <h3>Databáze</h3>
 
 Zde vlo¾te grafické schéma relaèní databáze (tabulek v databázi).
+<iframe src="./ER-diagram.pdf" width="100%" height="600px"></iframe>
+
+
 
 <h2>Instalace</h2>
 
 Struènì popi¹te: 
 <ul>
 <li>postup instalace na server,</li>
+composer install
+npm install
+npm run build
 <li>softwarové po¾adavky (verze PHP apod.),</li>
+PHP 8.4.1
 <li>jak rozbalit, konfigurovat, inicializovat databázi, ...</li>
+
 </ul>
 
 <h2>Známé problémy</h2>
