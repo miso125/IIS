@@ -2,15 +2,12 @@
   "version": 2,
   "builds": [
     {
-      "src": "api/index.php",
-      "use": "AndrejMikus/vercel-php@main"
+      "src": "Dockerfile",
+      "use": "@vercel/docker"
     }
   ],
   "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/api/index.php"
-    }
+    { "src": "/(.*)", "dest": "/" }
   ]
 }
 
