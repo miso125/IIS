@@ -11,8 +11,7 @@ A full-stack web application built with PHP and MySQL designed to digitize and s
 * **Business Logic Enforcement:** Automated checks, such as preventing chemical treatments within 14 days of a planned harvest.
 
 ## 🛠️ Tech Stack
-* [cite_start]**Backend:** PHP 
-* [cite_start]**Database:** MySQL 
-* [cite_start]**Frontend:** HTML5, CSS3 
+* **Backend:** PHP 
+* **Database:** MySQL 
+* **Frontend:** HTML5, CSS3 
 
-*(Tu potom môžeš pridať sekcie ako "How to Run" alebo "Future Extensions", kde spomenieš kalendár a štatistiky).*
